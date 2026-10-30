@@ -1,5 +1,9 @@
 # DG4AGA E-commerce Starter
 
+GitHub Repo Link: https://github.com/aaminahx/DG4AGA-Team03-Ecommerc
+Vercel Link: https://dg-4-aga-team03-ecommerce.vercel.app/
+
+
 This is a deliberately incomplete teaching scaffold for the 2026/27 DG4AGA Group Portfolio. It gives teams a common, free deployment route without completing the assessed e-commerce work.
 
 ## What is included
