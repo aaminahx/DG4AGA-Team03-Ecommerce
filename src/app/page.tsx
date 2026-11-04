@@ -5,12 +5,15 @@ export default function Home() {
     <>
       <section className="hero">
         <div>
-          <span className="eyebrow">A foundation, not a finished assessment</span>
-          <h1>Turn a real need into a responsible e-commerce platform.</h1>
+          <span className="eyebrow">Saving energy for all</span>
+          <h1>E commerce platform to save energy</h1>
           <p>
-            This starter proves the deployment path. Your team must define the
-            business, redesign the experience and implement, test and evaluate
-            the assessed functionality.
+            Rising household energy costs place financial pressure 
+            on households across the UK, yet identifying the most effective ways to 
+            reduce energy consumption can be difficult. Consumers must navigate confu
+            sing product specs, and various energy saving claims from products. As a r
+            esult households struggle to identify which products are most energy efficien
+            t for their household, budgets and circumstances.
           </p>
           <div className="actions">
             <Link className="button primary" href="/products">View sample catalogue</Link>
