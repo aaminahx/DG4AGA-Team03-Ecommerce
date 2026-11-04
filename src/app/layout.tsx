@@ -3,8 +3,8 @@ import Link from "next/link";
 import "./styles.css";
 
 export const metadata: Metadata = {
-  title: "EcoHome",
-  description: "Cut your energy bills with products matched to your home, budget and priorities.",
+  title: "DG4AGA Starter Store",
+  description: "A deliberately incomplete foundation for the DG4AGA team project",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
