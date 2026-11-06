@@ -11,9 +11,9 @@ export default function Home() {
             Rising household energy costs place financial pressure 
             on households across the UK, yet identifying the most effective ways to 
             reduce energy consumption can be difficult. Consumers must navigate confu
-            sing product specs, and various energy saving claims from products. As a r
-            esult households struggle to identify which products are most energy efficien
-            t for their household, budgets and circumstances.
+            sing product specs, and various energy saving claims from products. As a result 
+            households struggle to identify which products are most energy efficient
+             for their household, budgets and circumstances.
           </p>
           <div className="actions">
             <Link className="button primary" href="/products">View sample catalogue</Link>
