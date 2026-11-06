@@ -12,7 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <header className="site-header">
-          <Link className="brand" href="/">DG4AGA Starter</Link>
+          <Link className="brand" href="/">Eco Home </Link>
           <nav aria-label="Main navigation">
             <Link href="/">Home</Link>
             <Link href="/products">Products</Link>
