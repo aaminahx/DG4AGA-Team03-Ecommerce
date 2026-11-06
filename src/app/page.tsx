@@ -6,18 +6,13 @@ export default function Home() {
       <section className="hero">
         <div>
           <span className="eyebrow">Saving energy for all</span>
-          <h1>E commerce platform to save energy</h1>
+          <h1>Smarter homes. Smaller bills.</h1>
           <p>
-            Rising household energy costs place financial pressure 
-            on households across the UK, yet identifying the most effective ways to 
-            reduce energy consumption can be difficult. Consumers must navigate confu
-            sing product specs, and various energy saving claims from products. As a r
-            esult households struggle to identify which products are most energy efficien
-            t for their household, budgets and circumstances.
+            Discover affordable energy-saving products designed to help UK households reduce unnecessary energy use. Explore efficient lighting, heating, appliances and water-saving solutions tailored to your needs.
           </p>
           <div className="actions">
             <Link className="button primary" href="/products">View sample catalogue</Link>
-            <a className="button secondary" href="https://github.com" target="_blank" rel="noreferrer">Open GitHub</a>
+            <a className="button secondary" href="https://github.com/aaminahx/DG4AGA-Team03-Ecommerce" target="_blank" rel="noreferrer">Open GitHub</a>
           </div>
         </div>
         <div className="hero-card" aria-label="Project priorities">
