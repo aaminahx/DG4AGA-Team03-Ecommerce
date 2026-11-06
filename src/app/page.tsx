@@ -12,7 +12,7 @@ export default function Home() {
           </p>
           <div className="actions">
             <Link className="button primary" href="/products">View sample catalogue</Link>
-            <a className="button secondary" href="https://github.com" target="_blank" rel="noreferrer">Open GitHub</a>
+            <a className="button secondary" href="https://github.com/aaminahx/DG4AGA-Team03-Ecommerce" target="_blank" rel="noreferrer">Open GitHub</a>
           </div>
         </div>
         <div className="hero-card" aria-label="Project priorities">
