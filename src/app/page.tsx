@@ -6,7 +6,7 @@ export default function Home() {
       <section className="hero">
         <div>
           <span className="eyebrow">Saving energy for all</span>
-          <h1>E commerce platform to save energy</h1>
+          <h1>E-Commerce platform to save energy</h1>
           <p>
             Rising household energy costs place financial pressure 
             on households across the UK, yet identifying the most effective ways to 
