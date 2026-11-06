@@ -6,14 +6,9 @@ export default function Home() {
       <section className="hero">
         <div>
           <span className="eyebrow">Saving energy for all</span>
-          <h1>E-Commerce platform to save energy</h1>
+          <h1>Smarter homes. Smaller bills.</h1>
           <p>
-            Rising household energy costs place financial pressure 
-            on households across the UK, yet identifying the most effective ways to 
-            reduce energy consumption can be difficult. Consumers must navigate confusing
-            product specs, and various energy saving claims from products. As a result 
-            households struggle to identify which products are most energy efficient
-             for their household, budgets and circumstances.
+            Discover affordable energy-saving products designed to help UK households reduce unnecessary energy use. Explore efficient lighting, heating, appliances and water-saving solutions tailored to your needs.
           </p>
           <div className="actions">
             <Link className="button primary" href="/products">View sample catalogue</Link>
