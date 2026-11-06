@@ -10,8 +10,8 @@ export default function Home() {
           <p>
             Rising household energy costs place financial pressure 
             on households across the UK, yet identifying the most effective ways to 
-            reduce energy consumption can be difficult. Consumers must navigate confu
-            sing product specs, and various energy saving claims from products. As a result 
+            reduce energy consumption can be difficult. Consumers must navigate confusing
+            product specs, and various energy saving claims from products. As a result 
             households struggle to identify which products are most energy efficient
              for their household, budgets and circumstances.
           </p>
