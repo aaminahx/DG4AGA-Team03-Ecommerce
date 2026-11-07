@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </header>
         <main>{children}</main>
         <footer>
-          <p>Replace this identity, content and design with your team’s justified solution.</p>
+          <p>Eco Home helps UK households find affordable, energy-saving products for lighting, heating, appliances and water use.</p>
         </footer>
       </body>
     </html>
