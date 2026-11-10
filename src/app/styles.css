@@ -63,9 +63,10 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
 }
 
 
-/* =================================
-   EcoHome Basket Page
-================================= */
+
+/* =========================================
+   1. ECOHOME BASKET PAGE
+========================================= */
 
 .cart-page {
   max-width: 1180px;
@@ -110,7 +111,7 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   background: white;
   border: 1px solid var(--line);
   border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(21,33,43,.04);
+  box-shadow: 0 8px 24px rgba(21, 33, 43, .04);
 }
 
 .cart-item h2 {
@@ -163,6 +164,8 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
 .cart-remove:hover {
   background: #fff2f2;
 }
+
+/* Basket Summary */
 
 .cart-summary {
   padding: 28px;
@@ -223,6 +226,8 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   color: var(--ink);
 }
 
+/* Basket Buttons and Links */
+
 .cart-checkout {
   display: block;
   width: 100%;
@@ -262,6 +267,8 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   text-decoration: underline;
 }
 
+/* Empty Basket */
+
 .cart-empty {
   padding: 55px 25px;
   text-align: center;
@@ -289,6 +296,8 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   text-decoration: none;
 }
 
+/* Basket Responsive Design */
+
 @media (max-width: 800px) {
   .cart-layout {
     grid-template-columns: 1fr;
@@ -307,10 +316,9 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
 }
 
 
-
-/* =================================
-   EcoHome Checkout Page
-================================= */
+/* =========================================
+   2. ECOHOME CHECKOUT PAGE
+========================================= */
 
 .checkout-layout {
   display: grid;
@@ -389,6 +397,8 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   font-weight: 700;
 }
 
+/* Checkout Responsive Design */
+
 @media (max-width: 800px) {
   .checkout-layout {
     grid-template-columns: 1fr;
@@ -396,9 +406,9 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
 }
 
 
-/* =================================
-   EcoHome Order Confirmation
-================================= */
+/* =========================================
+   3. ECOHOME ORDER CONFIRMATION
+========================================= */
 
 .confirmation-card {
   max-width: 760px;
@@ -466,9 +476,338 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   background: var(--accent-dark);
 }
 
+/* Confirmation Responsive Design */
+
 @media (max-width: 550px) {
   .confirmation-card {
     padding: 24px;
+  }
+}
+
+
+/* =========================================
+   4. ECOHOME LOGIN & REGISTRATION
+========================================= */
+
+/* Main Authentication Container */
+
+.auth-page {
+  max-width: 480px;
+  margin: 50px auto;
+  padding: 35px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.auth-page h1 {
+  margin: 12px 0;
+  color: var(--ink);
+  font-size: 2.3rem;
+}
+
+.auth-intro {
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+
+/* Authentication Form */
+
+.auth-form {
+  gap: 20px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font: inherit;
+}
+
+/* Password Field */
+
+.password-field {
+  display: flex;
+  gap: 8px;
+}
+
+.password-field input {
+  min-width: 0;
+  flex: 1;
+}
+
+.password-toggle {
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  cursor: pointer;
+}
+
+/* Authentication Links */
+
+.auth-forgot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.auth-coming-soon {
+  font-size: .8rem;
+}
+
+.auth-forgot-link {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* Authentication Buttons */
+
+.auth-submit {
+  width: 100%;
+  cursor: pointer;
+}
+
+.auth-submit:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  margin-top: 25px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.auth-switch button {
+  margin-left: 6px;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Authentication Responsive Design */
+
+@media (max-width: 550px) {
+  .auth-page {
+    margin: 20px auto;
+    padding: 24px;
+  }
+}
+
+
+/* =========================================
+   5. ECOHOME FORGOT PASSWORD PAGE
+========================================= */
+
+/* Password Reset Success Icon */
+
+.reset-success-icon {
+  width: 65px;
+  height: 65px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  background: #e3f1e9;
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+/* Back Navigation Link */
+
+.auth-back-link {
+  display: inline-block;
+  margin-top: 25px;
+  color: var(--accent-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-back-link:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   6. ECOHOME MY ACCOUNT DASHBOARD
+========================================= */
+
+/* Main Account Page */
+
+.account-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.account-page h1 {
+  margin: 12px 0;
+  color: var(--ink);
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.account-intro {
+  color: var(--muted);
+  margin-bottom: 35px;
+}
+
+/* Account Cards Layout */
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.account-card {
+  padding: 25px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.account-card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.account-card h2 {
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.account-card p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Personal Account Information */
+
+.account-info {
+  margin: 20px 0;
+  padding: 15px;
+  background: var(--paper);
+  border-radius: 10px;
+}
+
+.account-info p {
+  margin: 5px 0;
+}
+
+.account-info p strong {
+  color: var(--ink);
+}
+
+/* Account Links and Membership */
+
+.account-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: var(--accent);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.account-link:hover {
+  text-decoration: underline;
+}
+
+.account-placeholder {
+  padding: 15px;
+  background: var(--paper);
+  border-radius: 10px;
+}
+
+.account-membership {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 14px;
+  background: #e3f1e9;
+  color: var(--accent-dark);
+  border-radius: 8px;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+/* Account Demo Notice and Navigation */
+
+.account-demo-note {
+  margin-top: 30px;
+  padding: 15px;
+  background: var(--paper);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.account-back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+/* Account Responsive Design */
+
+@media (max-width: 700px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================
+   7. ECOHOME EDIT PROFILE PAGE
+========================================= */
+
+.edit-profile-page {
+  max-width: 560px;
+  margin: 40px auto;
+  padding: 35px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.edit-profile-page h1 {
+  margin: 12px 0;
+  color: var(--ink);
+  font-size: 2.3rem;
+}
+
+.edit-profile-page .auth-form {
+  margin-top: 25px;
+}
+
+/* Edit Profile Responsive Design */
+
+@media (max-width: 550px) {
+  .edit-profile-page {
+    padding: 24px;
+    margin: 20px auto;
   }
 }
 
