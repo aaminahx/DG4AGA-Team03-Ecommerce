@@ -32,23 +32,18 @@ export default async function ProductsPage() {
       <div className="grid products">
         {products.map((product) => (
           <article className="product" key={product.id}>
-            <div className="product-image">
+<div className="product-image">
   {product.image_url ? (
     <img
       src={product.image_url}
       alt={product.name}
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "contain"
-      }}
     />
   ) : (
     <span aria-hidden="true">
       {product.name.slice(0, 1)}
     </span>
-    )} 
- </div>
+  )}
+</div>
             <span>{product.category?.name ?? "Uncategorised"}</span>
             <h2>{product.name}</h2>
             <p>{product.description}</p>
