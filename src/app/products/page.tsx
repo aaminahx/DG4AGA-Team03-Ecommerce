@@ -1,6 +1,7 @@
 import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
+import AddToCartButton from "@/components/AddToCartButton";
 
 const demoProducts: Product[] = [
   {
@@ -79,6 +80,15 @@ export default async function ProductsPage() {
                   : "Out of stock"}
               </small>
             </div>
+            {product.stock_quantity > 0 && (
+  <AddToCartButton
+    product={{
+      id: String(product.id),
+      name: product.name,
+      price: Number(product.price),
+    }}
+  />
+)}
           </article>
         ))}
       </div>
@@ -90,3 +100,6 @@ export default async function ProductsPage() {
     </section>
   );
 }
+
+
+
