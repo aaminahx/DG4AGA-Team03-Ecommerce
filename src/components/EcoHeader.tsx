@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { UserRound, Heart, Search } from "lucide-react";
+import BasketLink from "@/components/BasketLink";
 
 const categories = ["Lighting", "Heating", "Home & Kitchen", "Water Saving"];
 
@@ -37,12 +39,25 @@ export default function EcoHeader() {
 
       <div className="eco-actions">
         <form className="eco-search" action="/products" method="get">
-          <span aria-hidden="true">⌕</span>
+          <Search size={20} strokeWidth={1.8} aria-hidden="true" />
           <input aria-label="Search products" name="q" placeholder="Search products..." value={search} onChange={(event) => setSearch(event.target.value)} />
         </form>
-        <Link className="icon-link" href="/login" aria-label="Account">♙</Link>
-        <span className="icon-link" aria-label="Favourites coming soon" title="Favourites coming soon">♡</span>
-      
+        <Link className="icon-link" href="/login" aria-label="Sign in">
+  <UserRound size={24} strokeWidth={1.8} />
+</Link>
+        <Link className="nav-link" href="/account">
+  My Account
+</Link>
+        <span
+  className="icon-link"
+  aria-label="Favourites coming soon"
+  title="Favourites coming soon"
+>
+  <Heart size={24} strokeWidth={1.8} />
+</span>
+      <div className="basket-wrap">
+  <BasketLink />
+</div>
       </div>
     </header>
   );
