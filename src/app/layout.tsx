@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./styles.css";
+import { CartProvider } from "@/components/CartProvider";
+import BasketLink from "@/components/BasketLink";
 
 export const metadata: Metadata = {
   title: "EcoHome",
@@ -11,19 +13,25 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <header className="site-header">
-          <Link className="brand" href="/">Eco Home </Link>
-          <nav aria-label="Main navigation">
-            <Link href="/">Home</Link>
-            <Link href="/products">Products</Link>
-            <Link href="/login">Sign in</Link>
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer>
-          <p>Eco Home helps UK households find affordable, energy-saving products for lighting, heating, appliances and water use.</p>
-        </footer>
+        <CartProvider>
+          <header className="site-header">
+            <Link className="brand" href="/">Eco Home </Link>
+            <nav aria-label="Main navigation">
+              <Link href="/">Home</Link>
+              <Link href="/products">Products</Link>
+              <Link href="/login">Sign in</Link>
+              <Link href="/account">My Account</Link>
+              <BasketLink />
+            </nav>
+          </header>
+          <main>{children}</main>
+          <footer>
+            <p>Eco Home helps UK households find affordable, energy-saving products for lighting, heating, appliances and water use.</p>
+          </footer>
+        </CartProvider>
       </body>
     </html>
   );
 }
+
+
