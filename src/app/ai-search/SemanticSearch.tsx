@@ -24,7 +24,7 @@ export default function SemanticSearch({
 
   useEffect(() => {
     const aiWorker = new Worker(
-      new URL("../ai-search/worker.js", import.meta.url),
+      new URL("./worker.js", import.meta.url),
       { type: "module" }
     );
 

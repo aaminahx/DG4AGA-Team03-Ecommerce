@@ -1,4 +1,4 @@
-import SemanticSearch from "./SemanticSearch";
+import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
 
