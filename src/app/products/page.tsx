@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
+import AddToCartButton from "@/components/AddToCartButton";
 
 const demoProducts: Product[] = [
   { id: "demo-1", name: "Example product", description: "Shown only until Supabase is connected.", price: 12, stock_quantity: 8, image_url: null, category: { name: "Demo" } },
@@ -12,17 +13,22 @@ export default async function ProductsPage() {
   let setupMode = true;
 
   if (supabase) {
-    const { data, error } = await supabase
-      .from("products")
-      .select("id,name,description,price,stock_quantity,image_url,category:categories(name)")
-      .eq("is_active", true)
-      .order("name");
+  const { data, error } = await supabase
+    .from("products")
+    .select("id,name,description,price,stock_quantity,image_url,category:categories(name)")
+    .eq("is_active", true)
+    .order("name");
 
-    if (!error && data) {
-      products = data as unknown as Product[];
-      setupMode = false;
-    }
+  if (error) {
+    console.error("Supabase products error:", error);
+  } else if (data) {
+    console.log("Products retrieved from Supabase:", data.length);
+    products = data as unknown as Product[];
+    setupMode = false;
   }
+} else {
+  console.error("Supabase client could not be created.");
+}
 
   return (
     <section className="section">
@@ -51,6 +57,15 @@ export default async function ProductsPage() {
               <strong>£{Number(product.price).toFixed(2)}</strong>
               <small>{product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : "Out of stock"}</small>
             </div>
+            {product.stock_quantity > 0 && (
+  <AddToCartButton
+    product={{
+      id: String(product.id),
+      name: product.name,
+      price: Number(product.price),
+    }}
+  />
+)}
           </article>
         ))}
       </div>
@@ -58,3 +73,6 @@ export default async function ProductsPage() {
     </section>
   );
 }
+
+
+

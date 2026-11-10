@@ -61,3 +61,414 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   .hero { grid-template-columns: 1fr; padding-top: 52px; }
   .three, .products { grid-template-columns: 1fr; }
 }
+
+
+/* =================================
+   EcoHome Basket Page
+================================= */
+
+.cart-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 65px 6vw;
+}
+
+.cart-heading {
+  margin-bottom: 38px;
+}
+
+.cart-heading h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  margin: 12px 0;
+}
+
+.cart-heading p {
+  color: var(--muted);
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.cart-items {
+  display: grid;
+  gap: 18px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(21,33,43,.04);
+}
+
+.cart-item h2 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+}
+
+.cart-item p {
+  margin: 5px 0;
+  color: var(--muted);
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cart-quantity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-quantity button,
+.cart-remove {
+  padding: 9px 14px;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font: inherit;
+}
+
+.cart-quantity button:hover {
+  background: var(--paper);
+}
+
+.cart-quantity button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.cart-remove {
+  color: #a83232;
+  border-color: #efd0d0;
+}
+
+.cart-remove:hover {
+  background: #fff2f2;
+}
+
+.cart-summary {
+  padding: 28px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.cart-summary h2 {
+  margin-top: 0;
+  font-size: 1.6rem;
+}
+
+.delivery-message {
+  color: var(--accent-dark);
+  font-weight: 700;
+  font-size: .95rem;
+  margin-bottom: 12px;
+}
+
+.delivery-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #e5eee9;
+}
+
+.delivery-progress {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 20px;
+  transition: width .3s ease;
+}
+
+.delivery-caption {
+  color: var(--muted);
+  font-size: .8rem;
+  margin-top: 9px;
+}
+
+.cart-price-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 14px 0;
+  color: var(--muted);
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 18px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.cart-checkout {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cart-checkout:hover {
+  background: var(--accent-dark);
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.cart-actions a,
+.cart-actions button {
+  color: var(--accent-dark);
+  font: inherit;
+  font-weight: 700;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.cart-empty {
+  padding: 55px 25px;
+  text-align: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.cart-empty h2 {
+  font-size: 1.8rem;
+}
+
+.cart-empty p {
+  color: var(--muted);
+}
+
+.cart-empty a {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 13px 20px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+@media (max-width: 800px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .cart-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cart-page {
+    padding-top: 40px;
+  }
+}
+
+
+
+/* =================================
+   EcoHome Checkout Page
+================================= */
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1.4fr .8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.checkout-form-section {
+  min-width: 0;
+}
+
+.checkout-form {
+  gap: 20px;
+}
+
+.checkout-form h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.5rem;
+}
+
+.checkout-form label {
+  color: var(--ink);
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font: inherit;
+}
+
+.checkout-form textarea {
+  resize: vertical;
+}
+
+.checkout-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 8px 0;
+}
+
+.checkout-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.checkout-product p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.checkout-submit {
+  width: 100%;
+  cursor: pointer;
+}
+
+.checkout-note {
+  color: var(--muted);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+.checkout-back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =================================
+   EcoHome Order Confirmation
+================================= */
+
+.confirmation-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.confirmation-icon {
+  width: 65px;
+  height: 65px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 25px;
+  border-radius: 50%;
+  background: #e3f1e9;
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.confirmation-card h1 {
+  margin: 12px 0;
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  letter-spacing: -.04em;
+}
+
+.confirmation-message {
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+
+.confirmation-details {
+  margin-top: 25px;
+  padding: 22px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.confirmation-details h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+}
+
+.confirmation-details p {
+  color: var(--muted);
+}
+
+.confirmation-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 22px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.confirmation-button:hover {
+  background: var(--accent-dark);
+}
+
+@media (max-width: 550px) {
+  .confirmation-card {
+    padding: 24px;
+  }
+}
+
