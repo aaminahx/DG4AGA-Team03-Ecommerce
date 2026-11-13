@@ -811,3 +811,355 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
   }
 }
 
+
+
+
+/* =========================================
+   8. ECOHOME AI SHOPPING ASSISTANT
+========================================= */
+
+.ai-assistant-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(12, 17, 32, 0.48);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.ai-assistant-panel {
+  width: min(440px, 100%);
+  height: min(720px, calc(100dvh - 48px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dfe5e2;
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  animation: assistant-appear 0.2s ease-out;
+}
+
+.ai-assistant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  background: #21163f;
+  color: white;
+}
+
+.ai-assistant-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.ai-assistant-header p {
+  margin: 3px 0 0;
+  color: #d6cbea;
+  font-size: 0.8rem;
+}
+
+.ai-assistant-icon {
+  margin-right: 9px;
+  color: #e5b6ff;
+  font-size: 1.3rem;
+}
+
+.ai-assistant-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  background: transparent;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.ai-assistant-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.ai-assistant-welcome {
+  padding: 18px;
+  border: 1px solid #e1d9ed;
+  border-radius: 16px;
+  background: #f7f4fc;
+  line-height: 1.6;
+}
+
+.ai-assistant-suggestions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.ai-assistant-suggestions button {
+  padding: 13px 15px;
+  border: 1px solid #c9bfd9;
+  border-radius: 12px;
+  background: white;
+  color: #302447;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ai-assistant-suggestions button:hover {
+  background: #f5efff;
+  border-color: #8056b5;
+}
+
+.ai-assistant-suggestions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.ai-assistant-status {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ai-assistant-results h3 {
+  margin-top: 24px;
+}
+
+.ai-assistant-product {
+  padding: 15px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+
+.ai-assistant-product span,
+.ai-assistant-product small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ai-assistant-product h4 {
+  margin: 5px 0;
+}
+
+.ai-assistant-product p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ai-assistant-product strong {
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.ai-assistant-input {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid var(--line);
+  background: white;
+}
+
+.ai-assistant-input input {
+  min-width: 0;
+  flex: 1;
+  border-radius: 12px;
+}
+
+.ai-assistant-input button {
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: #6c3fa0;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-assistant-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@keyframes assistant-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile: full-screen assistant */
+
+@media (max-width: 600px) {
+  .ai-assistant-backdrop {
+    padding: 0;
+    background: white;
+  }
+
+  .ai-assistant-panel {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .ai-assistant-header {
+    padding: 18px;
+  }
+
+  .ai-assistant-content {
+    padding: 16px;
+  }
+
+  .ai-assistant-input {
+    padding: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+
+
+/* =========================================
+   ECOHOME AI SEARCH BAR — PREMIUM DESIGN
+========================================= */
+
+.ai-search-trigger {
+  width: min(420px, 100%);
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 12px 9px 17px;
+
+  border: 1px solid #e4e7e2;
+  border-radius: 999px;
+
+  background: #ffffff;
+  color: var(--ink);
+
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+
+  box-shadow: 0 5px 20px rgba(21, 33, 43, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ai-search-trigger:hover {
+  transform: translateY(-2px);
+  border-color: #b7d6ca;
+  box-shadow: 0 10px 28px rgba(20, 107, 91, 0.13);
+}
+
+.ai-search-trigger:focus-visible {
+  outline: 3px solid rgba(20, 107, 91, 0.25);
+  outline-offset: 4px;
+}
+
+.ai-search-leading-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: #eaf4ef;
+  color: #146b5b;
+
+  font-size: 23px;
+}
+
+.ai-search-text {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-search-text strong {
+  color: #15212b;
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.ai-search-text small {
+  color: #78847f;
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.ai-search-action {
+  width: 39px;
+  height: 39px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: #146b5b;
+  color: white;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ai-search-action svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ai-search-trigger:hover .ai-search-action {
+  background: #0d4b40;
+  transform: translateX(2px);
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+  .ai-search-trigger {
+    width: 100%;
+    min-height: 58px;
+    padding: 8px 11px;
+    gap: 10px;
+  }
+
+  .ai-search-leading-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ai-search-text strong {
+    font-size: 0.88rem;
+  }
+
+  .ai-search-text small {
+    font-size: 0.7rem;
+  }
+}

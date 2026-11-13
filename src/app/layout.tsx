@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./styles.css";
 import { CartProvider } from "@/components/CartProvider";
 import BasketLink from "@/components/BasketLink";
+import AIShoppingAssistantServer from "@/components/AIShoppingAssistantServer";
 
 export const metadata: Metadata = {
   title: "EcoHome",
@@ -16,6 +17,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <CartProvider>
           <header className="site-header">
             <Link className="brand" href="/">Eco Home </Link>
+            <AIShoppingAssistantServer />
+
             <nav aria-label="Main navigation">
               <Link href="/">Home</Link>
               <Link href="/products">Products</Link>
