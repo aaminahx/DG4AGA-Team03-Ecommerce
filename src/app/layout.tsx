@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import EcoHeader from "@/components/EcoHeader";
 import { CartProvider } from "@/components/CartProvider";
+import AIShoppingAssistantServer from "@/components/AIShoppingAssistantServer";
 import "./styles.css";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           <EcoHeader />
+          <AIShoppingAssistantServer />
           <main>{children}</main>
           <footer className="eco-footer">
             © {new Date().getFullYear()} EcoHome. Smarter living, lower energy use.
