@@ -1,48 +1,57 @@
 import Link from "next/link";
 
+const categoryCards = [
+  { title: "Lighting", className: "category-lighting", alt: "Pendant lighting" },
+  { title: "Heating", className: "category-heating", alt: "Radiator" },
+  { title: "Home & Kitchen", className: "category-kitchen", alt: "Kitchen kettle" },
+  { title: "Water Saving", className: "category-water", alt: "Shower" },
+];
+
 export default function Home() {
   return (
-    <>
-      <section className="hero">
-        <div>
-          <span className="eyebrow">A foundation, not a finished assessment</span>
-          <h1>Turn a real need into a responsible e-commerce platform.</h1>
-          <p>
-            This starter proves the deployment path. Your team must define the
-            business, redesign the experience and implement, test and evaluate
-            the assessed functionality.
-          </p>
-          <div className="actions">
-            <Link className="button primary" href="/products">View sample catalogue</Link>
-            <a className="button secondary" href="https://github.com" target="_blank" rel="noreferrer">Open GitHub</a>
-          </div>
+    <div className="eco-homepage">
+      <section className="eco-hero" aria-labelledby="hero-heading">
+        <div className="hero-copy">
+          <span className="eco-eyebrow">Energy-saving for every home</span>
+          <h1 id="hero-heading">Smarter<br />home living<span className="title-dot">.</span></h1>
+          <span className="title-underline" aria-hidden="true" />
+          <p>Energy-efficient products that help you save money, reduce usage and live more comfortably.</p>
+          <Link className="yellow-button" href="/products">Shop the range <span aria-hidden="true">→</span></Link>
         </div>
-        <div className="hero-card" aria-label="Project priorities">
-          <strong>Build for evidence</strong>
-          <ul>
-            <li>Secure and role-aware</li>
-            <li>Usable and accessible</li>
-            <li>Reliable and tested</li>
-            <li>Deployed and assessable</li>
-          </ul>
+        <div className="hero-visual" role="img" aria-label="Warm modern interior with a glowing table lamp, plants and books" />
+      </section>
+
+      <section className="savings-panel" id="savings" aria-labelledby="savings-heading">
+        <div className="savings-intro">
+          <span className="eco-eyebrow">Personalised energy plan</span>
+          <h2 id="savings-heading">Find My Savings</h2>
+          <p>Answer a few quick questions about your home, budget and energy use. Get personalised product recommendations and see how much you could save.</p>
+          <Link className="yellow-button" href="/products">Explore products <span aria-hidden="true">→</span></Link>
+          <small>Interactive quiz coming soon.</small>
+        </div>
+        <div className="savings-steps" aria-label="How the future savings quiz will work">
+          <div><span className="step-icon">▤</span><p>1. Tell us<br />about your home</p></div>
+          <div><span className="step-icon">☷</span><p>2. Set your<br />budget &amp; goals</p></div>
+          <div><span className="step-icon">✧</span><p>3. Get AI<br />recommendations</p></div>
+        </div>
+        <div className="savings-example" aria-label="Illustrative savings preview">
+          <span>Your potential savings</span>
+          <p><strong>£120</strong> / year <em>Example</em></p>
+          <div className="mini-bars"><div /><div /></div>
+          <small>Illustration only — not a calculated estimate.</small>
         </div>
       </section>
 
-      <section className="section">
-        <span className="eyebrow">Your first decisions</span>
-        <h2>Do not begin with colours and products.</h2>
-        <div className="grid three">
-          <article className="card"><span>01</span><h3>Need</h3><p>Who experiences a credible problem, and why does it matter?</p></article>
-          <article className="card"><span>02</span><h3>Value</h3><p>How will the platform improve the existing customer or operational journey?</p></article>
-          <article className="card"><span>03</span><h3>Evidence</h3><p>How will your team demonstrate quality, decisions and individual contribution?</p></article>
+      <section className="categories-section" id="categories" aria-labelledby="categories-heading">
+        <div className="category-heading"><h2 id="categories-heading">Shop by Category</h2><Link href="/products">View all categories <span aria-hidden="true">→</span></Link></div>
+        <div className="category-grid">
+          {categoryCards.map((category) => (
+            <Link href="/products" key={category.title} className={`category-tile ${category.className}`} aria-label={`Browse ${category.title} products`}>
+              <span>{category.title} <span aria-hidden="true">→</span></span>
+            </Link>
+          ))}
         </div>
       </section>
-
-      <section className="notice">
-        <strong>Intentionally incomplete:</strong> basket, checkout, orders,
-        returns, reviews, inventory rules, administrator tools and any AI-enabled
-        extension are not implemented for you.
-      </section>
-    </>
+    </div>
   );
 }
