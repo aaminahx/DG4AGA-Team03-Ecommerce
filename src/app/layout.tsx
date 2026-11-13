@@ -1,28 +1,27 @@
+
 import type { Metadata } from "next";
-import Link from "next/link";
+import EcoHeader from "@/components/EcoHeader";
+import { CartProvider } from "@/components/CartProvider";
 import "./styles.css";
 
 export const metadata: Metadata = {
-  title: "EcoHome",
-  description: "Cut your energy bills with products matched to your home, budget and priorities.",
+  title: "EcoHome | Smarter Home Living",
+  description: "Discover products to make your home more energy efficient.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body>
-        <header className="site-header">
-          <Link className="brand" href="/">Eco Home </Link>
-          <nav aria-label="Main navigation">
-            <Link href="/">Home</Link>
-            <Link href="/products">Products</Link>
-            <Link href="/login">Sign in</Link>
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer>
-          <p>Replace this identity, content and design with your team’s justified solution.</p>
-        </footer>
+        <CartProvider>
+          <EcoHeader />
+          <main>{children}</main>
+          <footer className="eco-footer">
+            © {new Date().getFullYear()} EcoHome. Smarter living, lower energy use.
+          </footer>
+        </CartProvider>
       </body>
     </html>
   );
