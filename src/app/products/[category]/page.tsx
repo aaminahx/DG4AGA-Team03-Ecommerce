@@ -10,34 +10,45 @@ import AddToCartButton from "@/components/AddToCartButton";
 const categories = {
   lighting: {
     title: "Lighting",
-    databaseNames: ["lighting"],
+    databaseNames: ["Lighting"],
     description: "Discover energy-efficient lighting for your home.",
   },
-  heating: {
-    title: "Heating",
-    databaseNames: ["heating"],
-    description: "Smart ways to keep your home warm and comfortable.",
+
+  "heating-insulation": {
+    title: "Heating & Insulation",
+    databaseNames: [
+      "Heating",
+      "Heating & Warmth",
+      "Home Insulation",
+      "Draught-proofing",
+    ],
+    description:
+      "Keep your home comfortable, reduce heat loss and manage heating efficiently.",
   },
-  insulation: {
-    title: "Home Insulation",
-    databaseNames: ["insulation", "draught proofing"],
-    description: "Keep warmth inside and reduce unwanted heat loss.",
-  },
+
   "smart-energy": {
     title: "Smart Energy",
-    databaseNames: [
-      "energy monitoring",
-      "energymonitoring",
-      "smart devices",
-    ],
-    description: "Monitor, manage and reduce your household energy use.",
+    databaseNames: ["Energy & Savings"],
+    description:
+      "Monitor and manage your household energy consumption.",
   },
+
   "water-savings": {
-    title: "Water Savings",
-    databaseNames: ["water saving", "water savings"],
-    description: "Save water and energy with practical household essentials.",
+    title: "Water Saving",
+    databaseNames: ["Water Saving"],
+    description:
+      "Explore practical ways to reduce water consumption at home.",
+  },
+
+  "kitchen-appliances": {
+    title: "Kitchen Appliances",
+    databaseNames: ["Home & Kitchen"],
+    description:
+      "Discover appliances for more efficient everyday cooking.",
   },
 };
+
+
 
 
 type CategorySlug = keyof typeof categories;

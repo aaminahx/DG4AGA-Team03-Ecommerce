@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 
+
 const categoryCards = [
   {
     title: "Lighting",
@@ -9,28 +10,28 @@ const categoryCards = [
     alt: "Energy-efficient lighting",
   },
   {
-    title: "Heating",
-    href: "/products/heating",
+    title: "Heating & Insulation",
+    href: "/products/heating-insulation",
     className: "category-heating",
-    alt: "Home heating",
-  },
-  {
-    title: "Home Insulation",
-    href: "/products/insulation",
-    className: "category-insulation",
-    alt: "Home insulation",
+    alt: "Heating and home insulation products",
   },
   {
     title: "Smart Energy",
     href: "/products/smart-energy",
     className: "category-smart",
-    alt: "Smart energy devices",
+    alt: "Energy monitoring and smart home devices",
   },
   {
-    title: "Water Savings",
+    title: "Water Saving",
     href: "/products/water-savings",
     className: "category-water",
     alt: "Water-saving products",
+  },
+  {
+    title: "Kitchen Appliances",
+    href: "/products/kitchen-appliances",
+    className: "category-kitchen",
+    alt: "Energy-conscious kitchen appliances",
   },
 ];
 

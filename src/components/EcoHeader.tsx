@@ -11,13 +11,35 @@ import AIShoppingAssistant from "@/components/AIShoppingAssistant";
 import { createClient } from "@/lib/supabase/client";
 import type { Product } from "@/lib/types";
 
+
 const categories = [
-  { name: "Lighting", href: "/products/lighting", icon: "✦" },
-  { name: "Heating", href: "/products/heating", icon: "♨" },
-  { name: "Home Insulation", href: "/products/insulation", icon: "⌂" },
-  { name: "Smart Energy", href: "/products/smart-energy", icon: "⚡" },
-  { name: "Water Savings", href: "/products/water-savings", icon: "◈" },
+  {
+    name: "Lighting",
+    href: "/products/lighting",
+    icon: "✦",
+  },
+  {
+    name: "Heating & Insulation",
+    href: "/products/heating-insulation",
+    icon: "♨",
+  },
+  {
+    name: "Smart Energy",
+    href: "/products/smart-energy",
+    icon: "⚡",
+  },
+  {
+    name: "Water Saving",
+    href: "/products/water-savings",
+    icon: "◈",
+  },
+  {
+    name: "Kitchen Appliances",
+    href: "/products/kitchen-appliances",
+    icon: "⌂",
+  },
 ];
+
 
 type Props = {
   products: Product[];
