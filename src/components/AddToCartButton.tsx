@@ -17,6 +17,7 @@ export default function AddToCartButton({ product }: Props) {
 
   return (
     <button
+      type="button"
       onClick={() => addToCart(product)}
       style={{
         backgroundColor: "#F4C542",
@@ -41,6 +42,3 @@ export default function AddToCartButton({ product }: Props) {
     </button>
   );
 }
-
-
-

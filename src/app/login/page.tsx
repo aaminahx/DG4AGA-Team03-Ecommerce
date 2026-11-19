@@ -54,9 +54,9 @@ export default function LoginPage() {
         });
 
         if (error) {
-          setMessage(error.message);
-        } else {
-          window.location.href = "/";
+        setMessage(error.message);
+       } else {
+        window.location.assign("/account");
         }
       }
     } catch (error) {

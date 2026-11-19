@@ -1,23 +1,98 @@
+
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { UserRound, Heart, Sparkles } from "lucide-react";
+
 import BasketLink from "@/components/BasketLink";
 import AIShoppingAssistant from "@/components/AIShoppingAssistant";
+import { createClient } from "@/lib/supabase/client";
 import type { Product } from "@/lib/types";
 
-const categories = ["Lighting", "Heating", "Home & Kitchen", "Water Saving"];
+
+const categories = [
+  {
+    name: "Lighting",
+    href: "/products/lighting",
+    icon: "✦",
+  },
+  {
+    name: "Heating & Insulation",
+    href: "/products/heating-insulation",
+    icon: "♨",
+  },
+  {
+    name: "Smart Energy",
+    href: "/products/smart-energy",
+    icon: "⚡",
+  },
+  {
+    name: "Water Saving",
+    href: "/products/water-savings",
+    icon: "◈",
+  },
+  {
+    name: "Kitchen Appliances",
+    href: "/products/kitchen-appliances",
+    icon: "⌂",
+  },
+];
+
 
 type Props = {
   products: Product[];
 };
 
 export default function EcoHeader({ products }: Props) {
+  const pathname = usePathname();
+
   const [shopOpen, setShopOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [assistantMinimized, setAssistantMinimized] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const isShopPage =
+    pathname === "/products" ||
+    pathname.startsWith("/products/");
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+
+    async function checkSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (active) {
+        setIsLoggedIn(!!user);
+      }
+    }
+
+    void checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (active) {
+          setIsLoggedIn(!!session?.user);
+        }
+      }
+    );
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const accountHref = isLoggedIn
+    ? "/account"
+    : "/login?next=/account";
 
   const handleHeaderTriggerClick = () => {
     if (!assistantOpen) {
@@ -33,8 +108,14 @@ export default function EcoHeader({ products }: Props) {
   return (
     <>
       <header className="eco-header">
-        <Link href="/" className="eco-logo" aria-label="EcoHome home">
-          <span className="eco-house" aria-hidden="true">⌂</span>
+        <Link
+          href="/"
+          className="eco-logo"
+          aria-label="EcoHome home"
+        >
+          <span className="eco-house" aria-hidden="true">
+            ⌂
+          </span>
           <span>EcoHome</span>
         </Link>
 
@@ -44,7 +125,10 @@ export default function EcoHeader({ products }: Props) {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          ☰ <span className="sr-only">Toggle navigation</span>
+          ☰
+          <span className="sr-only">
+            Toggle navigation
+          </span>
         </button>
 
         <nav
@@ -54,7 +138,7 @@ export default function EcoHeader({ products }: Props) {
           <div className="nav-shop">
             <button
               type="button"
-              className="nav-link"
+              className={`nav-link ${isShopPage ? "active-link" : ""}`}
               aria-expanded={shopOpen}
               onClick={() => setShopOpen(!shopOpen)}
             >
@@ -63,23 +147,29 @@ export default function EcoHeader({ products }: Props) {
 
             {shopOpen && (
               <div className="shop-menu">
-                {categories.map((category, index) => (
+                {categories.map((category) => (
                   <Link
-                    href="/products"
-                    onClick={() => setShopOpen(false)}
-                    key={category}
+                    key={category.name}
+                    href={category.href}
+                    onClick={() => {
+                      setShopOpen(false);
+                      setMenuOpen(false);
+                    }}
                   >
                     <span aria-hidden="true">
-                      {["♧", "▥", "▣", "♢"][index]}
+                      {category.icon}
                     </span>{" "}
-                    {category}
+                    {category.name}
                   </Link>
                 ))}
 
                 <Link
                   className="all-products-link"
                   href="/products"
-                  onClick={() => setShopOpen(false)}
+                  onClick={() => {
+                    setShopOpen(false);
+                    setMenuOpen(false);
+                  }}
                 >
                   Shop all products →
                 </Link>
@@ -87,7 +177,7 @@ export default function EcoHeader({ products }: Props) {
             )}
           </div>
 
-          <a className="nav-link active-link" href="/#savings">
+          <a className="nav-link" href="/#savings">
             Find My Savings
           </a>
         </nav>
@@ -102,16 +192,18 @@ export default function EcoHeader({ products }: Props) {
             aria-expanded={assistantOpen && !assistantMinimized}
           >
             <Sparkles className="ai-header-sparkle" size={17} />
-            <span className="ai-header-label">Ask EcoHome AI</span>
+            <span className="ai-header-label">
+              Ask EcoHome AI
+            </span>
             <span className="ai-header-arrow">⌄</span>
           </button>
 
-          <Link className="icon-link" href="/login" aria-label="Sign in">
+          <Link
+            className="icon-link"
+            href={accountHref}
+            aria-label={isLoggedIn ? "My Account" : "Sign in"}
+          >
             <UserRound size={24} strokeWidth={1.8} />
-          </Link>
-
-          <Link className="nav-link" href="/account">
-            My Account
           </Link>
 
           <span
