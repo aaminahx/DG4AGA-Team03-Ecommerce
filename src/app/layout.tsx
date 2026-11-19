@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import EcoHeader from "@/components/EcoHeader";
+import EcoHeaderServer from "@/components/EcoHeaderServer";
 import { CartProvider } from "@/components/CartProvider";
 import "./styles.css";
 
@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <CartProvider>
-          <EcoHeader />
+          <EcoHeaderServer />
           <main>{children}</main>
           <footer className="eco-footer">
             © {new Date().getFullYear()} EcoHome. Smarter living, lower energy use.
