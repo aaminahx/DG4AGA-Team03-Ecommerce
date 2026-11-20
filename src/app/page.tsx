@@ -1,11 +1,40 @@
 import Link from "next/link";
 
+
+
 const categoryCards = [
-  { title: "Lighting", className: "category-lighting", alt: "Pendant lighting" },
-  { title: "Heating", className: "category-heating", alt: "Radiator" },
-  { title: "Home & Kitchen", className: "category-kitchen", alt: "Kitchen kettle" },
-  { title: "Water Saving", className: "category-water", alt: "Shower" },
+  {
+    title: "Lighting",
+    href: "/products/lighting",
+    className: "category-lighting",
+    alt: "Energy-efficient lighting",
+  },
+  {
+    title: "Heating & Insulation",
+    href: "/products/heating-insulation",
+    className: "category-heating",
+    alt: "Heating and home insulation products",
+  },
+  {
+    title: "Smart Energy",
+    href: "/products/smart-energy",
+    className: "category-smart",
+    alt: "Energy monitoring and smart home devices",
+  },
+  {
+    title: "Water Saving",
+    href: "/products/water-savings",
+    className: "category-water",
+    alt: "Water-saving products",
+  },
+  {
+    title: "Kitchen Appliances",
+    href: "/products/kitchen-appliances",
+    className: "category-kitchen",
+    alt: "Energy-conscious kitchen appliances",
+  },
 ];
+
 
 export default function Home() {
   return (
@@ -44,13 +73,22 @@ export default function Home() {
 
       <section className="categories-section" id="categories" aria-labelledby="categories-heading">
         <div className="category-heading"><h2 id="categories-heading">Shop by Category</h2><Link href="/products">View all categories <span aria-hidden="true">→</span></Link></div>
-        <div className="category-grid">
-          {categoryCards.map((category) => (
-            <Link href="/products" key={category.title} className={`category-tile ${category.className}`} aria-label={`Browse ${category.title} products`}>
-              <span>{category.title} <span aria-hidden="true">→</span></span>
-            </Link>
-          ))}
-        </div>
+        
+<div className="category-grid">
+  {categoryCards.map((category) => (
+    <Link
+      href={category.href}
+      key={category.title}
+      className={`category-tile ${category.className}`}
+      aria-label={`Browse ${category.title} products`}
+    >
+      <span>
+        {category.title} <span aria-hidden="true">→</span>
+      </span>
+    </Link>
+  ))}
+</div>
+
       </section>
     </div>
   );
