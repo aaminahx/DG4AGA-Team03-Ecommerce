@@ -1,8 +1,10 @@
+
 import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
-import AddToCartButton from "@/components/AddToCartButton";
+import ProductCard from "@/components/ProductCard";
 
+// Temporary products shown only if Supabase is unavailable
 const demoProducts: Product[] = [
   {
     id: "demo-1",
@@ -27,7 +29,7 @@ const demoProducts: Product[] = [
 export default async function ProductsPage() {
   const supabase = await createClient();
 
-  let products = demoProducts;
+  let products: Product[] = demoProducts;
   let setupMode = true;
 
   if (supabase) {
@@ -40,66 +42,51 @@ export default async function ProductsPage() {
       .order("name");
 
     if (error) {
-      console.error("SUPABASE ERROR:", error);
+      console.error("SUPABASE PRODUCTS ERROR:", error);
     } else if (data) {
-      console.log("SUPABASE PRODUCTS FOUND:", data.length);
       products = data as unknown as Product[];
       setupMode = false;
     }
-  } // This closes if (supabase)
+  }
 
   return (
     <section className="section">
-      <span className="eyebrow">Sample catalogue</span>
-      <h1>Products</h1>
+      <span className="eyebrow">
+        EcoHome / Shop
+      </span>
+
+      <h1>Shop All Products</h1>
+
+      <p>
+        Explore our range of products designed to help
+        you make more energy-conscious choices at home.
+      </p>
 
       {setupMode && (
-        <p className="setup">
-          Setup mode: connect Supabase to replace this temporary data.
+        <p className="setup" role="alert">
+          Setup mode: connect Supabase to replace
+          this temporary data.
         </p>
       )}
 
+      {/* Keep the team's AI semantic search */}
       <SemanticSearch products={products} />
 
+      {/* Clean, reusable product cards */}
       <div className="grid products">
         {products.map((product) => (
-          <article className="product" key={product.id}>
-            <div className="product-image" aria-hidden="true">
-              {product.name.slice(0, 1)}
-            </div>
-
-            <span>{product.category?.name ?? "Uncategorised"}</span>
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-
-            <div className="product-meta">
-              <strong>£{Number(product.price).toFixed(2)}</strong>
-              <small>
-                {product.stock_quantity > 0
-                  ? `${product.stock_quantity} in stock`
-                  : "Out of stock"}
-              </small>
-            </div>
-            {product.stock_quantity > 0 && (
-  <AddToCartButton
-    product={{
-      id: String(product.id),
-      name: product.name,
-      price: Number(product.price),
-    }}
-  />
-)}
-          </article>
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
         ))}
       </div>
 
-      <p className="task-note">
-        <strong>Team task:</strong> implement justified search, category and
-        price filtering. Do not copy an unverified solution.
-      </p>
+      {!setupMode && products.length === 0 && (
+        <p>
+          No products are currently available.
+        </p>
+      )}
     </section>
   );
 }
-
-
-
