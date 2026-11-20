@@ -6,4 +6,17 @@ export type Product = {
   stock_quantity: number;
   image_url: string | null;
   category: { name: string } | null;
+  brand?: string | null;
+  model_code?: string | null;
+  product_type?: string | null;
+  colour?: string | null;
+  size_capacity?: string | null;
+  pack_of?: number | null;
+  specifications?: string | null;
+  energy_saving?: string | null;
+  drawbacks?: string | null;
+  warranty?: string | null;
+  price_note?: string | null;
+  where_listed?: string | null;
+  source_link?: string | null;
 };

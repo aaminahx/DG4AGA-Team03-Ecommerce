@@ -5,31 +5,31 @@ import Link from "next/link";
 const categoryCards = [
   {
     title: "Lighting",
-    href: "/products/lighting",
+    href: "/products?category=Lighting",
     className: "category-lighting",
     alt: "Energy-efficient lighting",
   },
   {
     title: "Heating & Insulation",
-    href: "/products/heating-insulation",
+    href: "/products?category=Heating",
     className: "category-heating",
     alt: "Heating and home insulation products",
   },
   {
     title: "Smart Energy",
-    href: "/products/smart-energy",
+    href: "/products?category=Heating",
     className: "category-smart",
     alt: "Energy monitoring and smart home devices",
   },
   {
     title: "Water Saving",
-    href: "/products/water-savings",
+    href: "/products?category=Water%20Saving",
     className: "category-water",
     alt: "Water-saving products",
   },
   {
     title: "Kitchen Appliances",
-    href: "/products/kitchen-appliances",
+    href: "/products?category=Home%20%26%20Kitchen",
     className: "category-kitchen",
     alt: "Energy-conscious kitchen appliances",
   },

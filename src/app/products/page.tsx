@@ -1,7 +1,8 @@
+import { Suspense } from "react";
 import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
-import AddToCartButton from "@/components/AddToCartButton";
+import ProductCatalogueClient from "@/components/ProductCatalogueClient";
 
 const demoProducts: Product[] = [
   {
@@ -10,15 +11,6 @@ const demoProducts: Product[] = [
     description: "Shown only until Supabase is connected.",
     price: 12,
     stock_quantity: 8,
-    image_url: null,
-    category: { name: "Demo" },
-  },
-  {
-    id: "demo-2",
-    name: "Second example",
-    description: "Replace all demonstration data with justified test data.",
-    price: 24,
-    stock_quantity: 2,
     image_url: null,
     category: { name: "Demo" },
   },
@@ -34,25 +26,40 @@ export default async function ProductsPage() {
     const { data, error } = await supabase
       .from("products")
       .select(
-        "id,name,description,price,stock_quantity,image_url,category:categories(name)"
+        `
+        id,
+        name,
+        description,
+        price,
+        stock_quantity,
+        image_url,
+        brand,
+        model_code,
+        product_type,
+        colour,
+        size_capacity,
+        pack_of,
+        specifications,
+        energy_saving,
+        drawbacks,
+        warranty,
+        price_note,
+        where_listed,
+        source_link,
+        category:categories(name)
+      `
       )
       .eq("is_active", true)
       .order("name");
 
-    if (error) {
-      console.error("SUPABASE ERROR:", error);
-    } else if (data) {
-      console.log("SUPABASE PRODUCTS FOUND:", data.length);
+    if (!error && data) {
       products = data as unknown as Product[];
       setupMode = false;
     }
-  } // This closes if (supabase)
+  }
 
   return (
-    <section className="section">
-      <span className="eyebrow">Sample catalogue</span>
-      <h1>Products</h1>
-
+    <section className="section fk-page-wrapper">
       {setupMode && (
         <p className="setup">
           Setup mode: connect Supabase to replace this temporary data.
@@ -61,45 +68,9 @@ export default async function ProductsPage() {
 
       <SemanticSearch products={products} />
 
-      <div className="grid products">
-        {products.map((product) => (
-          <article className="product" key={product.id}>
-            <div className="product-image" aria-hidden="true">
-              {product.name.slice(0, 1)}
-            </div>
-
-            <span>{product.category?.name ?? "Uncategorised"}</span>
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-
-            <div className="product-meta">
-              <strong>£{Number(product.price).toFixed(2)}</strong>
-              <small>
-                {product.stock_quantity > 0
-                  ? `${product.stock_quantity} in stock`
-                  : "Out of stock"}
-              </small>
-            </div>
-            {product.stock_quantity > 0 && (
-  <AddToCartButton
-    product={{
-      id: String(product.id),
-      name: product.name,
-      price: Number(product.price),
-    }}
-  />
-)}
-          </article>
-        ))}
-      </div>
-
-      <p className="task-note">
-        <strong>Team task:</strong> implement justified search, category and
-        price filtering. Do not copy an unverified solution.
-      </p>
+      <Suspense fallback={<p>Loading products...</p>}>
+        <ProductCatalogueClient products={products} />
+      </Suspense>
     </section>
   );
 }
-
-
-
