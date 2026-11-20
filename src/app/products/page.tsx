@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
@@ -67,7 +68,9 @@ export default async function ProductsPage() {
 
       <SemanticSearch products={products} />
 
-      <ProductCatalogueClient products={products} />
+      <Suspense fallback={<p>Loading products...</p>}>
+        <ProductCatalogueClient products={products} />
+      </Suspense>
     </section>
   );
 }

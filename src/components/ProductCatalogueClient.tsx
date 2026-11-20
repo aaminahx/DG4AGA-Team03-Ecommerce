@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import AddToCartButton from "@/components/AddToCartButton";
@@ -13,6 +14,8 @@ type SortOption = "relevance" | "price-asc" | "price-desc" | "name-asc";
 type PackFilter = "all" | "single" | "multipack";
 
 export default function ProductCatalogueClient({ products }: Props) {
+  const searchParams = useSearchParams();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const [selectedBrand, setSelectedBrand] = useState<string>("ALL");
@@ -34,6 +37,28 @@ export default function ProductCatalogueClient({ products }: Props) {
     });
     return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
   }, [products]);
+
+  useEffect(() => {
+    const paramCat = searchParams.get("category");
+    if (!paramCat) {
+      setSelectedCategory("ALL");
+      return;
+    }
+
+    const normalized = paramCat.toLowerCase().trim();
+    const matched = categories.find(([cat]) => {
+      const c = cat.toLowerCase();
+      return (
+        c === normalized ||
+        c.includes(normalized) ||
+        normalized.includes(c)
+      );
+    });
+
+    if (matched) {
+      setSelectedCategory(matched[0]);
+    }
+  }, [searchParams, categories]);
 
   const brands = useMemo(() => {
     const set = new Set<string>();
@@ -182,28 +207,11 @@ export default function ProductCatalogueClient({ products }: Props) {
 
   return (
     <div className="fk-v2-wrapper">
-      {/* Creative UK Eco Benchmark Strip */}
-      <div className="fk-eco-banner">
-        <div className="fk-eco-banner-badge">UK Eco Reference</div>
-        <div className="fk-eco-banner-items">
-          <span>
-            <strong>LED Spotlight Upgrade:</strong> ~£45/yr &amp; 35 kg CO₂ saved
-            (EST)[cite: 1]
-          </span>
-          <span>•</span>
-          <span>
-            <strong>Efficient Showerhead:</strong> ~£25/yr &amp; ~9,200 L water
-            saved (EST)[cite: 1]
-          </span>
-          <span>•</span>
-          <span>
-            <strong>Electricity Cap:</strong> 26.32 p/kWh (Ofgem Q4 2026)[cite: 1]
-          </span>
-        </div>
-      </div>
-
-      {/* Category Quick Pills Row */}
-      <div className="fk-cat-pills-bar" role="tablist" aria-label="Product categories">
+      <div
+        className="fk-cat-pills-bar"
+        role="tablist"
+        aria-label="Product categories"
+      >
         <button
           type="button"
           className={`fk-cat-chip ${selectedCategory === "ALL" ? "active" : ""}`}
@@ -225,10 +233,8 @@ export default function ProductCatalogueClient({ products }: Props) {
         ))}
       </div>
 
-      {/* HORIZONTAL FILTER & SORT BAR ON TOP OF PRODUCTS */}
       <div className="fk-horizontal-filter-bar">
         <div className="fk-filter-controls-grid">
-          {/* Search */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-search">Search</label>
             <input
@@ -240,7 +246,6 @@ export default function ProductCatalogueClient({ products }: Props) {
             />
           </div>
 
-          {/* Max Price */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-price">Max Price</label>
             <select
@@ -261,7 +266,6 @@ export default function ProductCatalogueClient({ products }: Props) {
             </select>
           </div>
 
-          {/* Brand */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-brand">Brand</label>
             <select
@@ -278,7 +282,6 @@ export default function ProductCatalogueClient({ products }: Props) {
             </select>
           </div>
 
-          {/* Product Type */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-type">Product Type</label>
             <select
@@ -295,7 +298,6 @@ export default function ProductCatalogueClient({ products }: Props) {
             </select>
           </div>
 
-          {/* Pack Size */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-pack">Pack Size</label>
             <select
@@ -309,7 +311,6 @@ export default function ProductCatalogueClient({ products }: Props) {
             </select>
           </div>
 
-          {/* Sort By */}
           <div className="fk-filter-field">
             <label htmlFor="fk-v2-sort">Sort By</label>
             <select
@@ -325,7 +326,6 @@ export default function ProductCatalogueClient({ products }: Props) {
           </div>
         </div>
 
-        {/* Second Row: Quick Checkboxes + Result Count + Clear */}
         <div className="fk-filter-subrow">
           <div className="fk-quick-toggles">
             <label className="fk-toggle-pill">
@@ -365,7 +365,6 @@ export default function ProductCatalogueClient({ products }: Props) {
         </div>
       </div>
 
-      {/* PRODUCT GRID (4 per row on desktop, 5 on wide screens) */}
       {filteredProducts.length === 0 ? (
         <div className="fk-empty-box">
           <h3>No matching products found</h3>
@@ -498,7 +497,6 @@ export default function ProductCatalogueClient({ products }: Props) {
         </div>
       )}
 
-      {/* Creative Side-by-Side Product Compare Tray & Modal */}
       {comparedProducts.length > 0 && (
         <div className="fk-compare-bar">
           <div>
