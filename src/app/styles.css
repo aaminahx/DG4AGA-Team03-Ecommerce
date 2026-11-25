@@ -2263,3 +2263,265 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
 
 /* ==================================================
 }
+
+/* =================================
+   ABOUT US SECTION
+================================= */
+
+.home-about {
+  background: #f5f2e8;
+  padding: 90px 7%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 55px;
+  align-items: center;
+  color: #26372d;
+}
+
+.home-about-content {
+  max-width: 580px;
+}
+
+.home-about-tag {
+  display: inline-block;
+  color: #65734e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.home-about-content h2 {
+  font-size: clamp(36px, 4vw, 55px);
+  line-height: 1.1;
+  letter-spacing: -2px;
+  margin: 0 0 25px;
+  color: #26372d;
+}
+
+.home-about-content h2 span {
+  color: #d4a928;
+}
+
+.home-about-content > h3 {
+  font-size: 19px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.home-about-content > p {
+  color: #60675d;
+  font-size: 15px;
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+
+.home-savings-feature {
+  display: flex;
+  gap: 16px;
+  background: #e9e4d4;
+  border-radius: 16px;
+  padding: 23px;
+  margin: 28px 0;
+}
+
+.home-savings-icon {
+  color: #b48c19;
+  font-size: 28px;
+}
+
+.home-savings-feature h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+.home-savings-feature p {
+  color: #60675d;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.home-about-tagline {
+  font-weight: 700;
+  color: #52694d !important;
+}
+
+.home-about-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: #eac653;
+  color: #26372d;
+  text-decoration: none;
+  padding: 15px 24px;
+  border-radius: 7px;
+  font-weight: 700;
+  margin-top: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.home-about-button:hover {
+  background: #dfb83f;
+  transform: translateY(-2px);
+}
+
+.home-about-visual {
+  position: relative;
+}
+
+.home-about-visual img {
+  width: 100%;
+  height: 490px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+.home-image-caption {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  background: #fffdf5;
+  color: #26372d;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.home-image-caption span {
+  color: #b48c19;
+  margin-right: 6px;
+}
+
+.home-about-features {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.home-about-card {
+  background: #fffdf5;
+  padding: 27px;
+  border-radius: 13px;
+  border: 1px solid #e9e4d4;
+}
+
+.home-about-card > span {
+  color: #b48c19;
+  font-size: 29px;
+}
+
+.home-about-card h3 {
+  font-size: 17px;
+  margin: 12px 0 7px;
+}
+
+.home-about-card p {
+  color: #60675d;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 768px) {
+  .home-about {
+    grid-template-columns: 1fr;
+    padding: 60px 6%;
+    gap: 35px;
+  }
+
+  .home-about-visual img {
+    height: 330px;
+  }
+
+  .home-about-features {
+    grid-template-columns: 1fr;
+  }
+
+  .home-about-content h2 {
+    font-size: 39px;
+  }
+}
+
+/* ABOUT US – NEW ECOHOME COLOUR SCHEME */
+
+/* Main background and text */
+.home-about {
+  background: #F7F0EA;
+  color: #0C1B37;
+}
+
+/* Headings */
+.home-about-content h2,
+.home-about-content h3,
+.home-about-card h3 {
+  color: #0C1B37;
+}
+
+/* Highlight within main heading */
+.home-about-content h2 span {
+  color: #F6C644;
+}
+
+/* Small section label */
+.home-about-tag {
+  color: #0C1B37;
+}
+
+/* Paragraph text */
+.home-about-content > p,
+.home-savings-feature p,
+.home-about-card p {
+  color: #374156;
+}
+
+/* Savings feature box */
+.home-savings-feature {
+  background: #FFFDFB;
+}
+
+.home-savings-icon {
+  color: #F6C644;
+}
+
+/* Tagline */
+.home-about-tagline {
+  color: #0C1B37 !important;
+}
+
+/* Button */
+.home-about-button {
+  background: #F6C644;
+  color: #0C1B37;
+}
+
+.home-about-button:hover {
+  background: #E9B72F;
+  color: #0C1B37;
+}
+
+/* Image caption */
+.home-image-caption {
+  background: #FFFDFB;
+  color: #0C1B37;
+}
+
+.home-image-caption span {
+  color: #F6C644;
+}
+
+/* Three feature cards */
+.home-about-card {
+  background: #FFFDFB;
+  border-color: #E9E1D9;
+}
+
+.home-about-card > span {
+  color: #F6C644;
+}
