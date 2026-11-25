@@ -55,8 +55,9 @@ export default function Home() {
           <span className="eco-eyebrow">Personalised energy plan</span>
           <h2 id="savings-heading">Find My Savings</h2>
           <p>Answer a few quick questions about your home, budget and energy use. Get personalised product recommendations and see how much you could save.</p>
-          <Link className="yellow-button" href="/products">Explore products <span aria-hidden="true">→</span></Link>
-          <small>Interactive quiz coming soon.</small>
+         <Link className="yellow-button" href="/quiz">
+          Start the quiz <span aria-hidden="true">→</span></Link>
+          <small>Get personalised energy-saving recommendations.</small>
         </div>
         <div className="savings-steps" aria-label="How the future savings quiz will work">
           <div><span className="step-icon">▤</span><p>1. Tell us<br />about your home</p></div>
