@@ -8,10 +8,21 @@ import AddToCartButton from "@/components/AddToCartButton";
 
 type Props = {
   products: Product[];
+  ratingsByProduct: Record<string, ProductRating>;
 };
 
-type SortOption = "relevance" | "price-asc" | "price-desc" | "name-asc";
+type SortOption =
+  | "relevance"
+  | "price-asc"
+  | "price-desc"
+  | "name-asc"
+  | "highest-rated";
 type PackFilter = "all" | "single" | "multipack";
+
+type ProductRating = {
+  averageRating: number;
+  totalCount: number;
+};
 
 function getCategoryFromParam(
   categories: [string, number][],
@@ -30,7 +41,10 @@ function getCategoryFromParam(
   return matched?.[0] ?? "ALL";
 }
 
-export default function ProductCatalogueClient({ products }: Props) {
+export default function ProductCatalogueClient({
+  products,
+  ratingsByProduct,
+}: Props) {
   const searchParams = useSearchParams();
 
   const categories = useMemo(() => {
@@ -189,9 +203,20 @@ export default function ProductCatalogueClient({ products }: Props) {
     if (sortBy === "name-asc") {
       return [...list].sort((a, b) => a.name.localeCompare(b.name));
     }
+    if (sortBy === "highest-rated") {
+      return [...list].sort((a, b) => {
+        const ratingA = ratingsByProduct[a.id];
+        const ratingB = ratingsByProduct[b.id];
+        return (
+          (ratingB?.averageRating ?? 0) - (ratingA?.averageRating ?? 0) ||
+          (ratingB?.totalCount ?? 0) - (ratingA?.totalCount ?? 0)
+        );
+      });
+    }
     return list;
   }, [
     products,
+    ratingsByProduct,
     searchQuery,
     selectedCategory,
     selectedBrand,
@@ -335,6 +360,7 @@ export default function ProductCatalogueClient({ products }: Props) {
               <option value="relevance">Relevance</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
+              <option value="highest-rated">Highest Rated</option>
               <option value="name-asc">Name: A to Z</option>
             </select>
           </div>
@@ -449,6 +475,17 @@ export default function ProductCatalogueClient({ products }: Props) {
                   <h2 className="fk-v2-title" title={product.name}>
                     {product.name}
                   </h2>
+                  <span className="catalogue-rating">
+                    {ratingsByProduct[product.id]?.totalCount ? (
+                      <>
+                        <span aria-hidden="true">★</span>{" "}
+                        {ratingsByProduct[product.id].averageRating.toFixed(1)} (
+                        {ratingsByProduct[product.id].totalCount})
+                      </>
+                    ) : (
+                      "No reviews yet"
+                    )}
+                  </span>
 
                   <p className="fk-v2-specs">
                     {product.specifications &&
