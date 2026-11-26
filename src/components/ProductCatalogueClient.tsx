@@ -13,11 +13,41 @@ type Props = {
 type SortOption = "relevance" | "price-asc" | "price-desc" | "name-asc";
 type PackFilter = "all" | "single" | "multipack";
 
+function getCategoryFromParam(
+  categories: [string, number][],
+  paramCat: string | null
+) {
+  if (!paramCat) return "ALL";
+
+  const normalized = paramCat.toLowerCase().trim();
+  const matched =
+    categories.find(([cat]) => cat.toLowerCase() === normalized) ??
+    categories.find(([cat]) => {
+      const category = cat.toLowerCase();
+      return category.includes(normalized) || normalized.includes(category);
+    });
+
+  return matched?.[0] ?? "ALL";
+}
+
 export default function ProductCatalogueClient({ products }: Props) {
   const searchParams = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  const categories = useMemo(() => {
+    const map = new Map<string, number>();
+    products.forEach((p) => {
+      const cat = p.category?.name?.trim() || "Uncategorised";
+      map.set(cat, (map.get(cat) ?? 0) + 1);
+    });
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [products]);
+
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") ?? ""
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(() =>
+    getCategoryFromParam(categories, searchParams.get("category"))
+  );
   const [selectedBrand, setSelectedBrand] = useState<string>("ALL");
   const [selectedType, setSelectedType] = useState<string>("ALL");
   const [maxPriceCap, setMaxPriceCap] = useState<number | "ALL">("ALL");
@@ -29,36 +59,20 @@ export default function ProductCatalogueClient({ products }: Props) {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompareDrawer, setShowCompareDrawer] = useState<boolean>(false);
 
-  const categories = useMemo(() => {
-    const map = new Map<string, number>();
-    products.forEach((p) => {
-      const cat = p.category?.name?.trim() || "Uncategorised";
-      map.set(cat, (map.get(cat) ?? 0) + 1);
-    });
-    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [products]);
+  useEffect(() => {
+    const categoryFromUrl = getCategoryFromParam(
+      categories,
+      searchParams.get("category")
+    );
+    // URL navigation intentionally synchronizes catalogue filter state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedCategory(categoryFromUrl);
+  }, [searchParams, categories]);
 
   useEffect(() => {
-    const paramCat = searchParams.get("category");
-    if (!paramCat) {
-      setSelectedCategory("ALL");
-      return;
-    }
-
-    const normalized = paramCat.toLowerCase().trim();
-    const matched = categories.find(([cat]) => {
-      const c = cat.toLowerCase();
-      return (
-        c === normalized ||
-        c.includes(normalized) ||
-        normalized.includes(c)
-      );
-    });
-
-    if (matched) {
-      setSelectedCategory(matched[0]);
-    }
-  }, [searchParams, categories]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
 
   const brands = useMemo(() => {
     const set = new Set<string>();

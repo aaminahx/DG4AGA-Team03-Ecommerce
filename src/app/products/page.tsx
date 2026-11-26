@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import SemanticSearch from "../ai-search/SemanticSearch";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
 import ProductCatalogueClient from "@/components/ProductCatalogueClient";
@@ -65,8 +64,6 @@ export default async function ProductsPage() {
           Setup mode: connect Supabase to replace this temporary data.
         </p>
       )}
-
-      <SemanticSearch products={products} />
 
       <Suspense fallback={<p>Loading products...</p>}>
         <ProductCatalogueClient products={products} />
