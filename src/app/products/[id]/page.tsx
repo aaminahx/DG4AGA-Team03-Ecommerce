@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductReviews from "@/components/ProductReviews";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -52,6 +53,29 @@ export default async function ProductDetailPage({ params }: PageProps) {
   }
 
   const product = data as unknown as Product & { category_id?: string };
+
+  const { data: reviewRatings, error: reviewRatingsError } = await supabase
+    .from("product_reviews")
+    .select("rating")
+    .eq("product_id", product.id);
+
+  if (reviewRatingsError) {
+    console.error("Could not load product review summary:", reviewRatingsError);
+  }
+
+  const productRatings = reviewRatings ?? [];
+  const reviewCount = productRatings.length;
+  const averageRating =
+    reviewCount > 0
+      ? Math.round(
+          (productRatings.reduce(
+            (sum, review) => sum + Number(review.rating),
+            0
+          ) /
+            reviewCount) *
+            10
+        ) / 10
+      : 0;
 
   // Fetch up to 4 similar products in the same category
   let relatedProducts: Product[] = [];
@@ -161,6 +185,25 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
 
           <h1 className="fk-pdp-title">{product.name}</h1>
+          <a
+            className="pdp-rating-summary"
+            href="#reviews"
+            aria-label={`Read customer reviews. ${
+              reviewCount > 0
+                ? `${averageRating.toFixed(1)} out of 5 from ${reviewCount} reviews`
+                : "No reviews yet"
+            }`}
+          >
+            {reviewCount > 0 ? (
+              <>
+                <span aria-hidden="true">★★★★★</span>
+                <strong>{averageRating.toFixed(1)}</strong>
+                <span>({reviewCount} reviews)</span>
+              </>
+            ) : (
+              <span>No reviews yet · Be the first to review</span>
+            )}
+          </a>
 
           <div className="fk-pdp-price-panel">
             <div className="fk-pdp-price-line">
@@ -241,6 +284,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      <ProductReviews productId={product.id} />
 
       {/* Similar Products Carousel/Row */}
       {relatedProducts.length > 0 && (
