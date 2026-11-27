@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 
 const LOW_STOCK = 5;
 
@@ -151,26 +150,7 @@ export default async function AdminDashboard() {
         </section>
       </div>
 
-      <section aria-labelledby="next-h">
-        <h2 id="next-h" className="adm-sub">Coming up</h2>
-        <div className="adm-actions">
-          <Link href="/admin/products" className="adm-action adm-action-on">
-            <span aria-hidden="true">✏️</span>
-            <strong>Manage products</strong>
-            <small>Search, restock and hide products</small>
-          </Link>
-          <div className="adm-action" aria-disabled="true">
-            <span aria-hidden="true">🧾</span>
-            <strong>Orders</strong>
-            <small>Track and update orders</small>
-          </div>
-          <div className="adm-action" aria-disabled="true">
-            <span aria-hidden="true">💬</span>
-            <strong>Enquiries</strong>
-            <small>Reply to customers</small>
-          </div>
-        </div>
-      </section>
+
     </>
   );
 }
