@@ -1,9 +1,14 @@
-
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+
+const SUSPENSION_MESSAGE =
+  "Your EcoHome account has been suspended. Please contact customer support for assistance.";
+
+const VERIFICATION_MESSAGE =
+  "We could not verify your account status. Please try again later.";
 
 export default function LoginPage() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -11,19 +16,82 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [accountNotice, setAccountNotice] = useState("");
+
+  /* =========================================
+     ACCOUNT RESTRICTION NOTICES
+  ========================================= */
+
+  useEffect(() => {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const reason = params.get("reason");
+
+    if (reason === "account-suspended") {
+      setAccountNotice(SUSPENSION_MESSAGE);
+    }
+
+    if (reason === "verification-failed") {
+      setAccountNotice(VERIFICATION_MESSAGE);
+    }
+  }, []);
+
+  /* =========================================
+     LOGIN AND REGISTRATION
+  ========================================= */
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     setBusy(true);
     setMessage("");
+    setAccountNotice("");
 
     const form = new FormData(event.currentTarget);
-    const email = String(form.get("email") ?? "").trim();
-    const password = String(form.get("password") ?? "");
+
+    const firstName = String(
+      form.get("firstName") ?? ""
+    ).trim();
+
+    const lastName = String(
+      form.get("lastName") ?? ""
+    ).trim();
+
+    const email = String(
+      form.get("email") ?? ""
+    ).trim();
+
+    const password = String(
+      form.get("password") ?? ""
+    );
+
     const confirmPassword = String(
       form.get("confirmPassword") ?? ""
     );
 
-    if (isRegistering && password !== confirmPassword) {
+    /* VALIDATE REGISTRATION DETAILS */
+
+    if (
+      isRegistering &&
+      (!firstName ||
+        !lastName ||
+        firstName.length > 50 ||
+        lastName.length > 50)
+    ) {
+      setMessage(
+        "Please enter a valid first and last name."
+      );
+
+      setBusy(false);
+      return;
+    }
+
+    if (
+      isRegistering &&
+      password !== confirmPassword
+    ) {
       setMessage("Your passwords do not match.");
       setBusy(false);
       return;
@@ -32,50 +100,149 @@ export default function LoginPage() {
     try {
       const supabase = createClient();
 
+      /* =========================================
+         CUSTOMER REGISTRATION
+      ========================================= */
+
       if (isRegistering) {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
+        const { data, error } =
+          await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                first_name: firstName,
+                last_name: lastName,
+                display_name: `${firstName} ${lastName}`,
+              },
+            },
+          });
 
         if (error) {
           setMessage(error.message);
         } else if (data.session) {
-          setMessage("Your account has been created and you are signed in!");
+          setMessage(
+            "Your account has been created and you are signed in!"
+          );
         } else {
           setMessage(
             "Account created! Please check your email to confirm your account before signing in."
           );
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+
+        /* =========================================
+           CUSTOMER AND ADMIN LOGIN
+        ========================================= */
+
+        const { data, error } =
+          await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
 
         if (error) {
-        setMessage(error.message);
-       } else {
-        window.location.assign("/account");
+          if (error.code === "user_banned") {
+            setAccountNotice(SUSPENSION_MESSAGE);
+          } else if (
+            error.code === "invalid_credentials"
+          ) {
+            setMessage(
+              "Incorrect email address or password."
+            );
+          } else if (
+            error.code === "email_not_confirmed"
+          ) {
+            setMessage(
+              "Please confirm your email address before signing in."
+            );
+          } else {
+            setMessage(
+              "Unable to sign in. Please try again later."
+            );
+          }
+
+          return;
         }
+
+        /* VERIFY AUTHENTICATED USER */
+
+        if (!data.user || !data.session) {
+          await supabase.auth.signOut({
+            scope: "local",
+          });
+
+          setMessage(
+            "Unable to verify your login. Please try again."
+          );
+
+          return;
+        }
+
+        /* =========================================
+           ACCOUNT SUSPENSION CHECK
+        ========================================= */
+
+        const {
+          data: profile,
+          error: profileError,
+        } = await supabase
+          .from("profiles")
+          .select("is_suspended")
+          .eq("id", data.user.id)
+          .single();
+
+        /* FAIL SECURELY IF VERIFICATION FAILS */
+
+        if (profileError || !profile) {
+          await supabase.auth.signOut({
+            scope: "local",
+          });
+
+          setAccountNotice(VERIFICATION_MESSAGE);
+
+          return;
+        }
+
+        /* BLOCK SUSPENDED ACCOUNTS */
+
+        if (profile.is_suspended !== false) {
+          await supabase.auth.signOut({
+            scope: "local",
+          });
+
+          setAccountNotice(SUSPENSION_MESSAGE);
+
+          return;
+        }
+
+        /* SUCCESSFUL LOGIN */
+
+        window.location.assign("/account");
       }
-    } catch (error) {
+    } catch {
       setMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again."
+        "Something went wrong. Please try again."
       );
     } finally {
       setBusy(false);
     }
   }
 
+  /* =========================================
+     LOGIN PAGE INTERFACE
+  ========================================= */
+
   return (
     <section className="section narrow auth-page">
-      <span className="eyebrow">Welcome to EcoHome</span>
+      <span className="eyebrow">
+        Welcome to EcoHome
+      </span>
 
       <h1>
-        {isRegistering ? "Create your account" : "Welcome back"}
+        {isRegistering
+          ? "Create your account"
+          : "Welcome back"}
       </h1>
 
       <p className="auth-intro">
@@ -84,9 +251,74 @@ export default function LoginPage() {
           : "Sign in to access your EcoHome account."}
       </p>
 
-      <form className="form auth-form" onSubmit={submit}>
+      {/* ACCOUNT RESTRICTION NOTICE */}
+
+      {accountNotice && (
+        <div
+          className="auth-account-notice"
+          role="alert"
+        >
+          <span
+            className="auth-notice-icon"
+            aria-hidden="true"
+          >
+            !
+          </span>
+
+          <div>
+            <strong>
+              {accountNotice === SUSPENSION_MESSAGE
+                ? "Account suspended"
+                : "Account verification unavailable"}
+            </strong>
+
+            <p>{accountNotice}</p>
+          </div>
+        </div>
+      )}
+
+      <form
+        className="form auth-form"
+        onSubmit={submit}
+      >
+
+        {/* REGISTRATION NAME FIELDS */}
+
+        {isRegistering && (
+          <div className="auth-name-row">
+            <label>
+              First name
+
+              <input
+                name="firstName"
+                type="text"
+                placeholder="First name"
+                autoComplete="given-name"
+                maxLength={50}
+                required
+              />
+            </label>
+
+            <label>
+              Last name
+
+              <input
+                name="lastName"
+                type="text"
+                placeholder="Last name"
+                autoComplete="family-name"
+                maxLength={50}
+                required
+              />
+            </label>
+          </div>
+        )}
+
+        {/* EMAIL ADDRESS */}
+
         <label>
           Email address
+
           <input
             name="email"
             type="email"
@@ -96,36 +328,56 @@ export default function LoginPage() {
           />
         </label>
 
+        {/* PASSWORD */}
+
         <label>
           Password
+
           <div className="password-field">
             <input
               name="password"
-              type={showPassword ? "text" : "password"}
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
               placeholder="Enter your password"
               autoComplete={
-                isRegistering ? "new-password" : "current-password"
+                isRegistering
+                  ? "new-password"
+                  : "current-password"
               }
-              minLength={8}
+              minLength={
+                isRegistering ? 8 : undefined
+              }
               required
             />
 
             <button
               type="button"
               className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() =>
+                setShowPassword(!showPassword)
+              }
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
         </label>
 
+        {/* CONFIRM PASSWORD */}
+
         {isRegistering && (
           <label>
             Confirm password
+
             <input
               name="confirmPassword"
-              type={showPassword ? "text" : "password"}
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
               placeholder="Enter your password again"
               autoComplete="new-password"
               minLength={8}
@@ -134,13 +386,20 @@ export default function LoginPage() {
           </label>
         )}
 
+        {/* FORGOTTEN PASSWORD */}
+
         {!isRegistering && (
           <div className="auth-forgot">
-            <Link href="/forgot-password" className="auth-forgot-link">
-                Forgot your password?
+            <Link
+              href="/forgot-password"
+              className="auth-forgot-link"
+            >
+              Forgot your password?
             </Link>
           </div>
         )}
+
+        {/* SUBMIT BUTTON */}
 
         <button
           type="submit"
@@ -154,12 +413,20 @@ export default function LoginPage() {
               : "Sign in"}
         </button>
 
+        {/* GENERAL FORM MESSAGES */}
+
         {message && (
-          <p role="status" aria-live="polite" className="form-message">
+          <p
+            role="status"
+            aria-live="polite"
+            className="form-message"
+          >
             {message}
           </p>
         )}
       </form>
+
+      {/* LOGIN AND REGISTRATION SWITCH */}
 
       <div className="auth-switch">
         {isRegistering
@@ -168,13 +435,17 @@ export default function LoginPage() {
 
         <button
           type="button"
+          disabled={busy}
           onClick={() => {
             setIsRegistering(!isRegistering);
             setMessage("");
+            setAccountNotice("");
             setShowPassword(false);
           }}
         >
-          {isRegistering ? "Sign in" : "Create one"}
+          {isRegistering
+            ? "Sign in"
+            : "Create one"}
         </button>
       </div>
     </section>

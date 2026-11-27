@@ -12,33 +12,35 @@ import { createClient } from "@/lib/supabase/client";
 import type { Product } from "@/lib/types";
 
 
+
 const categories = [
   {
     name: "Lighting",
-    href: "/products/lighting",
+    href: "/products?category=Lighting",
     icon: "✦",
   },
   {
     name: "Heating & Insulation",
-    href: "/products/heating-insulation",
+    href: "/products?category=Heating%20%26%20Insulation",
     icon: "♨",
   },
   {
     name: "Smart Energy",
-    href: "/products/smart-energy",
+    href: "/products?category=Smart%20Energy",
     icon: "⚡",
   },
   {
     name: "Water Saving",
-    href: "/products/water-savings",
+    href: "/products?category=Water%20Saving",
     icon: "◈",
   },
   {
     name: "Kitchen Appliances",
-    href: "/products/kitchen-appliances",
+    href: "/products?category=Kitchen%20Appliances",
     icon: "⌂",
   },
 ];
+
 
 
 type Props = {
