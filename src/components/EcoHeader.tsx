@@ -247,7 +247,7 @@ export default function EcoHeader({ products }: Props) {
             )}
           </div>
 
-          <Link className="nav-link" href="/#savings">
+          <Link className="nav-link" href="/quiz">
             Find My Savings
           </Link>
         </nav>
