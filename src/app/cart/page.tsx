@@ -203,9 +203,20 @@ export default function CartPage() {
 
         </aside>
       </div>
+      <p style={{ marginTop: "32px", textAlign: "center" }}>
+  Need to return an item?{" "}
+  <Link
+    href="/returns"
+    style={{ fontWeight: 700, textDecoration: "underline" }}
+  >
+    View our Returns &amp; Refunds page
+  </Link>
+</p>
     </main>
   );
 }
+
+
 
 
 
