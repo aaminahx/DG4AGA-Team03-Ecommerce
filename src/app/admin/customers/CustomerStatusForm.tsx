@@ -65,7 +65,7 @@ export default function CustomerStatusForm({
         </div>
       )}
 
-      {!open && (
+      {(!open || state.success) && (
         <div className="adm-customer-management-row">
           <div>
             <h3>
@@ -92,7 +92,7 @@ export default function CustomerStatusForm({
               setOpen(true);
               setPasswordEdited(true);
             }}
-            disabled
+            
           >
             {suspended
               ? "Reactivate account"

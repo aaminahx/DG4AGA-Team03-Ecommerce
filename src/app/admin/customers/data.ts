@@ -229,7 +229,7 @@ export async function getCustomers(): Promise<Customer[]> {
 
     const authSyncRequired =
       authSuspended === null ||
-      suspended !== authSuspended;
+      authSuspended === true;
 
     return {
       id: profile.id,
@@ -465,8 +465,7 @@ export async function getCustomerDetails(customerId: string) {
 
   const authSuspended = isAuthSuspended(user);
 
-  const authSyncRequired =
-    suspended !== authSuspended;
+  const authSyncRequired = authSuspended === true;
 
   /* =========================================
      RETURN CUSTOMER INFORMATION

@@ -4512,3 +4512,309 @@ footer { padding: 30px 6vw; color: var(--muted); border-top: 1px solid var(--lin
     font-size: 15px;
   }
 }
+
+/* =========================================
+   CUSTOMER PROFILE MANAGEMENT
+========================================= */
+
+.edit-profile-form {
+  width: 100%;
+}
+
+.profile-field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.profile-readonly-input {
+  background: #f1f2ef !important;
+  color: #6b7280 !important;
+  cursor: default;
+}
+
+.profile-field-error {
+  display: block;
+  margin-top: 5px;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.edit-profile-form input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+
+.profile-security-note {
+  padding: 16px;
+  border: 1px solid #d9e3d6;
+  border-radius: 10px;
+  background: #f2f6ef;
+  color: #31543b;
+}
+
+.profile-security-note strong {
+  font-size: 13px;
+}
+
+.profile-security-note p {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.profile-success-message {
+  padding: 15px 17px;
+  border: 1px solid #bbd7c0;
+  border-radius: 10px;
+  background: #edf6ef;
+  color: #24613b;
+  font-size: 14px;
+}
+
+.profile-success-message p {
+  margin: 5px 0 0;
+  line-height: 1.5;
+}
+
+.profile-error-message {
+  padding: 15px 17px;
+  border: 1px solid #edc5c5;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #a52828;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.edit-profile-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .profile-security-note,
+  .profile-success-message,
+  .profile-error-message {
+    padding: 12px;
+  }
+}
+
+/* =========================================
+   MY ACCOUNT - PERSONAL DETAILS
+========================================= */
+
+.account-detail-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7e2;
+}
+
+.account-detail-row:last-child {
+  border-bottom: none;
+}
+
+.account-detail-row strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #68716b;
+  margin-bottom: 5px;
+}
+
+.account-detail-row p {
+  margin: 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.account-verification {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.account-verified {
+  background: #e8f3e9;
+  color: #28613b;
+}
+
+.account-unverified {
+  background: #fff3d6;
+  color: #856314;
+}
+
+.account-edit-button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+/* =========================================
+   ACCOUNT - ADMINISTRATOR ACCESS
+========================================= */
+
+.account-admin-card {
+  grid-column: 1 / -1;
+  position: relative;
+  background: #f5f7fa;
+  border: 1px solid #d8dfe7;
+  border-left: 4px solid #24364c;
+}
+
+.account-admin-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #e4eaf1;
+  color: #24364c;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.account-admin-card h2 {
+  color: #24364c;
+}
+
+.account-admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #24364c;
+  color: #ffffff;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 16px;
+  transition: background 0.2s ease;
+}
+
+.account-admin-button:hover {
+  background: #354c66;
+  color: #ffffff;
+}
+
+.account-admin-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+@media (max-width: 600px) {
+  .account-admin-button {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .account-admin-badge {
+    top: 16px;
+    right: 16px;
+    font-size: 10px;
+  }
+}
+/* =========================================
+   CUSTOMER AND ADMIN LOGIN
+========================================= */
+
+.auth-login-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: 5px;
+  background: #eeece7;
+  border-radius: 10px;
+  margin: 24px 0;
+}
+
+.auth-login-tabs button {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  padding: 12px 8px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-login-tabs button:hover {
+  color: #24364c;
+  background: #e2e5e8;
+}
+
+.auth-login-tabs button.active {
+  background: #24364c;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.auth-login-tabs button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ADMINISTRATOR ACCESS NOTICE */
+
+.auth-admin-notice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: #f0f3f7;
+  border: 1px solid #d8dfe7;
+  border-left: 3px solid #24364c;
+  border-radius: 8px;
+  color: #24364c;
+}
+
+.auth-admin-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.auth-admin-notice strong {
+  font-size: 14px;
+}
+
+.auth-admin-notice p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.auth-admin-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 24px;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 480px) {
+  .auth-login-tabs button {
+    font-size: 12px;
+    padding: 12px 6px;
+  }
+
+  .auth-admin-notice {
+    padding: 12px;
+  }
+}

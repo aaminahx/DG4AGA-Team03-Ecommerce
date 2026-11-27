@@ -12,10 +12,10 @@ const VERIFICATION_MESSAGE =
 
 export default function LoginPage() {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-
   const [accountNotice, setAccountNotice] = useState("");
 
   /* =========================================
@@ -39,11 +39,25 @@ export default function LoginPage() {
   }, []);
 
   /* =========================================
+     SWITCH LOGIN TYPE
+  ========================================= */
+
+  function switchLoginType(admin: boolean) {
+    setIsAdminLogin(admin);
+    setIsRegistering(false);
+    setMessage("");
+    setAccountNotice("");
+    setShowPassword(false);
+  }
+
+  /* =========================================
      LOGIN AND REGISTRATION
   ========================================= */
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (busy) return;
 
     setBusy(true);
     setMessage("");
@@ -104,7 +118,7 @@ export default function LoginPage() {
          CUSTOMER REGISTRATION
       ========================================= */
 
-      if (isRegistering) {
+      if (isRegistering && !isAdminLogin) {
         const { data, error } =
           await supabase.auth.signUp({
             email,
@@ -180,7 +194,7 @@ export default function LoginPage() {
         }
 
         /* =========================================
-           ACCOUNT SUSPENSION CHECK
+           ACCOUNT STATUS AND ROLE CHECK
         ========================================= */
 
         const {
@@ -188,7 +202,7 @@ export default function LoginPage() {
           error: profileError,
         } = await supabase
           .from("profiles")
-          .select("is_suspended")
+          .select("is_suspended, role")
           .eq("id", data.user.id)
           .single();
 
@@ -216,9 +230,32 @@ export default function LoginPage() {
           return;
         }
 
-        /* SUCCESSFUL LOGIN */
+        /* =========================================
+           VERIFY ADMINISTRATOR ACCESS
+        ========================================= */
 
-        window.location.assign("/account");
+        if (
+          isAdminLogin &&
+          profile.role !== "admin"
+        ) {
+          await supabase.auth.signOut({
+            scope: "local",
+          });
+
+          setMessage(
+            "Access denied. This login is restricted to authorised administrators."
+          );
+
+          return;
+        }
+
+        /* =========================================
+           SUCCESSFUL LOGIN
+        ========================================= */
+
+        window.location.assign(
+          isAdminLogin ? "/admin" : "/account"
+        );
       }
     } catch {
       setMessage(
@@ -240,16 +277,65 @@ export default function LoginPage() {
       </span>
 
       <h1>
-        {isRegistering
-          ? "Create your account"
-          : "Welcome back"}
+        {isAdminLogin
+          ? "Administrator Login"
+          : isRegistering
+            ? "Create your account"
+            : "Welcome back"}
       </h1>
 
       <p className="auth-intro">
-        {isRegistering
-          ? "Join EcoHome and discover a more sustainable way to shop."
-          : "Sign in to access your EcoHome account."}
+        {isAdminLogin
+          ? "Sign in to manage the EcoHome store."
+          : isRegistering
+            ? "Join EcoHome and discover a more sustainable way to shop."
+            : "Sign in to access your EcoHome account."}
       </p>
+
+      {/* LOGIN TYPE SELECTOR */}
+
+      <div className="auth-login-tabs">
+        <button
+          type="button"
+          className={!isAdminLogin ? "active" : ""}
+          aria-pressed={!isAdminLogin}
+          disabled={busy}
+          onClick={() => switchLoginType(false)}
+        >
+          Customer Login
+        </button>
+
+        <button
+          type="button"
+          className={isAdminLogin ? "active" : ""}
+          aria-pressed={isAdminLogin}
+          disabled={busy}
+          onClick={() => switchLoginType(true)}
+        >
+          Admin Login
+        </button>
+      </div>
+
+      {/* ADMINISTRATOR ACCESS NOTICE */}
+
+      {isAdminLogin && (
+        <div className="auth-admin-notice">
+          <span
+            className="auth-admin-icon"
+            aria-hidden="true"
+          >
+            🛡️
+          </span>
+
+          <div>
+            <strong>Administrator Access</strong>
+
+            <p>
+              Restricted to authorised EcoHome staff.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ACCOUNT RESTRICTION NOTICE */}
 
@@ -278,13 +364,20 @@ export default function LoginPage() {
       )}
 
       <form
+        key={
+          isAdminLogin
+            ? "admin-login"
+            : isRegistering
+              ? "customer-register"
+              : "customer-login"
+        }
         className="form auth-form"
         onSubmit={submit}
       >
 
         {/* REGISTRATION NAME FIELDS */}
 
-        {isRegistering && (
+        {isRegistering && !isAdminLogin && (
           <div className="auth-name-row">
             <label>
               First name
@@ -296,6 +389,7 @@ export default function LoginPage() {
                 autoComplete="given-name"
                 maxLength={50}
                 required
+                disabled={busy}
               />
             </label>
 
@@ -309,6 +403,7 @@ export default function LoginPage() {
                 autoComplete="family-name"
                 maxLength={50}
                 required
+                disabled={busy}
               />
             </label>
           </div>
@@ -317,14 +412,21 @@ export default function LoginPage() {
         {/* EMAIL ADDRESS */}
 
         <label>
-          Email address
+          {isAdminLogin
+            ? "Administrator email address"
+            : "Email address"}
 
           <input
             name="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={
+              isAdminLogin
+                ? "Enter your administrator email"
+                : "you@example.com"
+            }
             autoComplete="email"
             required
+            disabled={busy}
           />
         </label>
 
@@ -351,11 +453,13 @@ export default function LoginPage() {
                 isRegistering ? 8 : undefined
               }
               required
+              disabled={busy}
             />
 
             <button
               type="button"
               className="password-toggle"
+              disabled={busy}
               onClick={() =>
                 setShowPassword(!showPassword)
               }
@@ -367,7 +471,7 @@ export default function LoginPage() {
 
         {/* CONFIRM PASSWORD */}
 
-        {isRegistering && (
+        {isRegistering && !isAdminLogin && (
           <label>
             Confirm password
 
@@ -382,6 +486,7 @@ export default function LoginPage() {
               autoComplete="new-password"
               minLength={8}
               required
+              disabled={busy}
             />
           </label>
         )}
@@ -408,9 +513,11 @@ export default function LoginPage() {
         >
           {busy
             ? "Please wait..."
-            : isRegistering
-              ? "Create account"
-              : "Sign in"}
+            : isAdminLogin
+              ? "Sign in to Admin Dashboard"
+              : isRegistering
+                ? "Create account"
+                : "Sign in"}
         </button>
 
         {/* GENERAL FORM MESSAGES */}
@@ -428,26 +535,33 @@ export default function LoginPage() {
 
       {/* LOGIN AND REGISTRATION SWITCH */}
 
-      <div className="auth-switch">
-        {isRegistering
-          ? "Already have an account?"
-          : "Don't have an account?"}
-
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => {
-            setIsRegistering(!isRegistering);
-            setMessage("");
-            setAccountNotice("");
-            setShowPassword(false);
-          }}
-        >
+      {!isAdminLogin ? (
+        <div className="auth-switch">
           {isRegistering
-            ? "Sign in"
-            : "Create one"}
-        </button>
-      </div>
+            ? "Already have an account?"
+            : "Don't have an account?"}
+
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setIsRegistering(!isRegistering);
+              setMessage("");
+              setAccountNotice("");
+              setShowPassword(false);
+            }}
+          >
+            {isRegistering
+              ? "Sign in"
+              : "Create one"}
+          </button>
+        </div>
+      ) : (
+        <p className="auth-admin-footer">
+          🔒 Administrator accounts cannot be
+          registered publicly.
+        </p>
+      )}
     </section>
   );
 }

@@ -362,10 +362,11 @@ export default async function AdminCustomerDetailsPage({
 
       {/* Account management */}
       <CustomerStatusForm
-        customerId={customer.id}
-        suspended={customer.suspended}
-      />
-      <CustomerAccountHistory
+      key={`${customer.id}-${customer.suspended}`}
+      customerId={customer.id}
+      suspended={customer.suspended}
+    />
+          <CustomerAccountHistory
   suspended={customer.suspended}
   suspendedAt={customer.suspendedAt}
   suspendedByName={customer.suspendedByName}

@@ -210,37 +210,12 @@ export async function updateCustomerStatus(
     };
   }
 
-  // 13. Synchronise Supabase Auth access
-  let authSyncFailed = false;
-
-  try {
-    const { error: banError } =
-      await admin.auth.admin.updateUserById(customerId, {
-        ban_duration: newSuspended ? "876000h" : "none",
-      });
-
-    authSyncFailed = Boolean(banError);
-  } catch {
-    authSyncFailed = true;
-  }
-
-  // 14. Refresh affected admin pages
+    // 13. Refresh affected admin pages
   revalidatePath("/admin");
   revalidatePath("/admin/customers");
   revalidatePath(`/admin/customers/${customerId}`);
 
-  // 15. Report any partial failure
-  if (authSyncFailed) {
-    return {
-      success: true,
-      message: newSuspended
-        ? "Customer suspension recorded."
-        : "Customer reactivation recorded.",
-      warning:
-        "The database was updated, but authentication synchronisation failed. Administrator review is required.",
-    };
-  }
-
+  // 14. Confirm the successful account status change
   return {
     success: true,
     message: newSuspended

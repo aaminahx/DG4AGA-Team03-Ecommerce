@@ -1,27 +1,49 @@
 
-"use client";
-
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import EditProfileForm from "./EditProfileForm";
 
-export default function EditProfilePage() {
-  const [firstName, setFirstName] = useState("Alex");
-  const [lastName, setLastName] = useState("Green");
-  const [email, setEmail] = useState("alex@example.com");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
+export default async function EditProfilePage() {
+  const supabase = await createClient();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  if (!supabase) {
+    redirect("/login?next=/account/edit");
+  }
 
-    setMessage(
-      "Demo mode: Your profile changes have been saved for this demonstration. Permanent saving will be enabled when Supabase is connected."
-    );
+  // Verify the current user.
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    redirect("/login?next=/account/edit");
+  }
+
+  // Retrieve only the signed-in user's profile.
+  const { data: profile, error: profileError } =
+    await supabase
+      .from("profiles")
+      .select(
+        "first_name, last_name, phone, is_suspended"
+      )
+      .eq("id", user.id)
+      .single();
+
+  if (profileError || !profile) {
+    redirect("/login?reason=verification-failed");
+  }
+
+  if (profile.is_suspended !== false) {
+    redirect("/login?reason=account-suspended");
   }
 
   return (
     <main className="section narrow edit-profile-page">
-      <span className="eyebrow">EcoHome / My Account / Edit Profile</span>
+      <span className="eyebrow">
+        EcoHome / My Account / Edit Profile
+      </span>
 
       <h1>Edit your profile</h1>
 
@@ -29,62 +51,19 @@ export default function EditProfilePage() {
         Keep your personal information up to date.
       </p>
 
-      <form className="form auth-form" onSubmit={handleSubmit}>
-        <label>
-          First name
-          <input
-            type="text"
-            value={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
-            required
-          />
-        </label>
+      <EditProfileForm
+        firstName={profile.first_name ?? ""}
+        lastName={profile.last_name ?? ""}
+        email={user.email ?? ""}
+        phone={profile.phone ?? ""}
+      />
 
-        <label>
-          Last name
-          <input
-            type="text"
-            value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          Email address
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          Phone number
-          <input
-            type="tel"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder="Enter your phone number"
-          />
-        </label>
-
-        <button type="submit" className="button primary auth-submit">
-          Save Changes
-        </button>
-
-        {message && (
-          <p role="status" className="form-message">
-            {message}
-          </p>
-        )}
-      </form>
-
-      <Link href="/account" className="auth-back-link">
+      <Link
+        href="/account"
+        className="auth-back-link"
+      >
         ← Back to My Account
       </Link>
     </main>
   );
 }
-
