@@ -19,7 +19,25 @@ export default async function AccountPage() {
   if (authError || !user) {
     redirect("/login?next=/account");
   }
+// Verify that the customer's account is not suspended.
+const { data: profile, error: profileError } =
+  await supabase
+    .from("profiles")
+    .select(
+      "first_name, last_name, display_name, phone, is_suspended"
+       )
+    .eq("id", user.id)
+    .single();
 
+// Deny access if the account status cannot be verified.
+if (profileError || !profile) {
+  redirect("/login?reason=verification-failed");
+}
+
+// Prevent suspended customers from accessing their account.
+if (profile.is_suspended !== false) {
+  redirect("/login?reason=account-suspended");
+}
   // Load only the signed-in customer's orders.
   const { data: orders, error: ordersError } = await supabase
     .from("orders")
@@ -31,12 +49,11 @@ export default async function AccountPage() {
 
   const email = user.email ?? "No email available";
 
-  const firstName =
-    typeof user.user_metadata?.first_name === "string"
-      ? user.user_metadata.first_name
-      : "";
+    const firstName = profile.first_name ?? "";
+    const lastName = profile.last_name ?? "";
+    const phone = profile.phone ?? "";
 
-  const displayName = firstName || email.split("@")[0];
+    const displayName = firstName.trim() || "Customer";
 
   return (
     <main className="section account-page">

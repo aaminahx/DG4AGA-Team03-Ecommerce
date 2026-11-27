@@ -1,10 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Heart, Search, Sparkles, UserRound } from "lucide-react";
+import { Search, Sparkles, UserRound } from "lucide-react";
 import type { FormEvent } from "react";
 
 import BasketLink from "@/components/BasketLink";

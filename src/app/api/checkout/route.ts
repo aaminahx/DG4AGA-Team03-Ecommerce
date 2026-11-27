@@ -30,6 +30,35 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+    // Verify the customer's account status.
+const { data: profile, error: profileError } =
+  await supabase
+    .from("profiles")
+    .select("is_suspended")
+    .eq("id", user.id)
+    .single();
+
+// Fail securely if account verification is unavailable.
+if (profileError || !profile) {
+  return NextResponse.json(
+    {
+      error:
+        "We could not verify your account status. Please try again later.",
+    },
+    { status: 503 }
+  );
+}
+
+// Prevent suspended customers from placing orders.
+if (profile.is_suspended !== false) {
+  return NextResponse.json(
+    {
+      error:
+        "Your account has been suspended. Please contact EcoHome customer support.",
+    },
+    { status: 403 }
+  );
+}
 
     // Limit request size to avoid oversized payloads.
     const rawBody = await request.text();
@@ -114,6 +143,15 @@ export async function POST(request: Request) {
     );
 
     if (error) {
+        if (error.code === "42501") {
+        return NextResponse.json(
+          {
+            error:
+              "Your account is not authorised to place this order. Please contact EcoHome customer support.",
+          },
+          { status: 403 }
+        );
+      }
       console.error("Checkout database error:", {
   code: error.code,
   message: error.message,
