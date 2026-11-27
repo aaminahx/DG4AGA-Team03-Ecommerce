@@ -381,13 +381,6 @@ export default function EcoHeader({ products }: Props) {
             <UserRound size={24} strokeWidth={1.8} />
           </Link>
 
-          <span
-            className="icon-link"
-            aria-label="Favourites coming soon"
-            title="Favourites coming soon"
-          >
-            <Heart size={24} strokeWidth={1.8} />
-          </span>
 
           <div className="basket-wrap">
             <BasketLink />
