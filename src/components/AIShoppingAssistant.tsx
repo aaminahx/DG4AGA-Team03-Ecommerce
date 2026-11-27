@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useCallback,
   useEffect,
@@ -73,7 +74,9 @@ export default function AIShoppingAssistant({
   const [status, setStatus] = useState("Loading AI model...");
   const [searching, setSearching] = useState(false);
 
-  productsRef.current = products;
+  useEffect(() => {
+    productsRef.current = products;
+  }, [products]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -148,8 +151,6 @@ export default function AIShoppingAssistant({
     modelReadyRef.current = false;
     searchingRef.current = false;
     pendingQueryRef.current = null;
-    setSearching(false);
-    setStatus("Loading AI model...");
 
     const worker = new Worker(
       new URL("../app/ai-search/worker.js", import.meta.url),
@@ -407,7 +408,12 @@ export default function AIShoppingAssistant({
                   {msg.products && msg.products.length > 0 && (
                     <div className="ai-chat-products">
                       {msg.products.map((product) => (
-                        <div className="ai-chat-product-card" key={product.id}>
+                        <Link
+                          className="ai-chat-product-card"
+                          href={`/products/${product.id}`}
+                          key={product.id}
+                          onClick={() => onMinimizedChange(true)}
+                        >
                           <div className="ai-chat-prod-meta">
                             <span className="ai-prod-cat">
                               {product.category?.name ?? "Eco Product"}
@@ -422,8 +428,9 @@ export default function AIShoppingAssistant({
                             <strong className="ai-prod-price">
                               £{Number(product.price).toFixed(2)}
                             </strong>
+                            <span className="ai-prod-view-link">View &amp; Buy →</span>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   )}

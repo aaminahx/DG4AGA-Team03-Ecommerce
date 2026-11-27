@@ -8,16 +8,60 @@ import AddToCartButton from "@/components/AddToCartButton";
 
 type Props = {
   products: Product[];
+  ratingsByProduct: Record<string, ProductRating>;
 };
 
-type SortOption = "relevance" | "price-asc" | "price-desc" | "name-asc";
+type SortOption =
+  | "relevance"
+  | "price-asc"
+  | "price-desc"
+  | "name-asc"
+  | "highest-rated";
 type PackFilter = "all" | "single" | "multipack";
 
-export default function ProductCatalogueClient({ products }: Props) {
+type ProductRating = {
+  averageRating: number;
+  totalCount: number;
+};
+
+function getCategoryFromParam(
+  categories: [string, number][],
+  paramCat: string | null
+) {
+  if (!paramCat) return "ALL";
+
+  const normalized = paramCat.toLowerCase().trim();
+  const matched =
+    categories.find(([cat]) => cat.toLowerCase() === normalized) ??
+    categories.find(([cat]) => {
+      const category = cat.toLowerCase();
+      return category.includes(normalized) || normalized.includes(category);
+    });
+
+  return matched?.[0] ?? "ALL";
+}
+
+export default function ProductCatalogueClient({
+  products,
+  ratingsByProduct,
+}: Props) {
   const searchParams = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  const categories = useMemo(() => {
+    const map = new Map<string, number>();
+    products.forEach((p) => {
+      const cat = p.category?.name?.trim() || "Uncategorised";
+      map.set(cat, (map.get(cat) ?? 0) + 1);
+    });
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [products]);
+
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") ?? ""
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(() =>
+    getCategoryFromParam(categories, searchParams.get("category"))
+  );
   const [selectedBrand, setSelectedBrand] = useState<string>("ALL");
   const [selectedType, setSelectedType] = useState<string>("ALL");
   const [maxPriceCap, setMaxPriceCap] = useState<number | "ALL">("ALL");
@@ -29,36 +73,20 @@ export default function ProductCatalogueClient({ products }: Props) {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompareDrawer, setShowCompareDrawer] = useState<boolean>(false);
 
-  const categories = useMemo(() => {
-    const map = new Map<string, number>();
-    products.forEach((p) => {
-      const cat = p.category?.name?.trim() || "Uncategorised";
-      map.set(cat, (map.get(cat) ?? 0) + 1);
-    });
-    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [products]);
+  useEffect(() => {
+    const categoryFromUrl = getCategoryFromParam(
+      categories,
+      searchParams.get("category")
+    );
+    // URL navigation intentionally synchronizes catalogue filter state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedCategory(categoryFromUrl);
+  }, [searchParams, categories]);
 
   useEffect(() => {
-    const paramCat = searchParams.get("category");
-    if (!paramCat) {
-      setSelectedCategory("ALL");
-      return;
-    }
-
-    const normalized = paramCat.toLowerCase().trim();
-    const matched = categories.find(([cat]) => {
-      const c = cat.toLowerCase();
-      return (
-        c === normalized ||
-        c.includes(normalized) ||
-        normalized.includes(c)
-      );
-    });
-
-    if (matched) {
-      setSelectedCategory(matched[0]);
-    }
-  }, [searchParams, categories]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
 
   const brands = useMemo(() => {
     const set = new Set<string>();
@@ -175,9 +203,20 @@ export default function ProductCatalogueClient({ products }: Props) {
     if (sortBy === "name-asc") {
       return [...list].sort((a, b) => a.name.localeCompare(b.name));
     }
+    if (sortBy === "highest-rated") {
+      return [...list].sort((a, b) => {
+        const ratingA = ratingsByProduct[a.id];
+        const ratingB = ratingsByProduct[b.id];
+        return (
+          (ratingB?.averageRating ?? 0) - (ratingA?.averageRating ?? 0) ||
+          (ratingB?.totalCount ?? 0) - (ratingA?.totalCount ?? 0)
+        );
+      });
+    }
     return list;
   }, [
     products,
+    ratingsByProduct,
     searchQuery,
     selectedCategory,
     selectedBrand,
@@ -321,6 +360,7 @@ export default function ProductCatalogueClient({ products }: Props) {
               <option value="relevance">Relevance</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
+              <option value="highest-rated">Highest Rated</option>
               <option value="name-asc">Name: A to Z</option>
             </select>
           </div>
@@ -435,6 +475,17 @@ export default function ProductCatalogueClient({ products }: Props) {
                   <h2 className="fk-v2-title" title={product.name}>
                     {product.name}
                   </h2>
+                  <span className="catalogue-rating">
+                    {ratingsByProduct[product.id]?.totalCount ? (
+                      <>
+                        <span aria-hidden="true">★</span>{" "}
+                        {ratingsByProduct[product.id].averageRating.toFixed(1)} (
+                        {ratingsByProduct[product.id].totalCount})
+                      </>
+                    ) : (
+                      "No reviews yet"
+                    )}
+                  </span>
 
                   <p className="fk-v2-specs">
                     {product.specifications &&

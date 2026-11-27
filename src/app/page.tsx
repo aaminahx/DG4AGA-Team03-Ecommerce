@@ -55,8 +55,9 @@ export default function Home() {
           <span className="eco-eyebrow">Personalised energy plan</span>
           <h2 id="savings-heading">Find My Savings</h2>
           <p>Answer a few quick questions about your home, budget and energy use. Get personalised product recommendations and see how much you could save.</p>
-          <Link className="yellow-button" href="/products">Explore products <span aria-hidden="true">→</span></Link>
-          <small>Interactive quiz coming soon.</small>
+         <Link className="yellow-button" href="/quiz">
+          Start the quiz <span aria-hidden="true">→</span></Link>
+          <small>Get personalised energy-saving recommendations.</small>
         </div>
         <div className="savings-steps" aria-label="How the future savings quiz will work">
           <div><span className="step-icon">▤</span><p>1. Tell us<br />about your home</p></div>
@@ -90,6 +91,88 @@ export default function Home() {
 </div>
 
       </section>
+      {/* ABOUT US SECTION */}
+      <section className="home-about" id="about">
+        <div className="home-about-content">
+          <span className="home-about-tag">ABOUT ECOHOME</span>
+
+          <h2>
+            A better home.
+            <br />
+            A smarter way to <span>live.</span>
+          </h2>
+
+          <h3>
+            Making sustainable living simpler, one home at a time.
+          </h3>
+
+          <p>
+            At EcoHome, we believe that creating a more sustainable home
+            shouldn&apos;t be complicated. We&apos;re here to make
+            energy-efficient living more accessible by bringing together
+            practical products that help you use less energy, reduce waste
+            and make your home more comfortable.
+          </p>
+
+          <p>
+            Whether you&apos;re looking to improve your lighting, make
+            better use of water or find smarter home essentials, we&apos;re
+            here to help you make choices that benefit both your home and
+            the environment.
+          </p>
+
+          <div className="home-savings-feature">
+            <span className="home-savings-icon">✦</span>
+            <div>
+              <h3>Discover your home&apos;s savings potential.</h3>
+              <p>
+                Our Find My Savings feature is designed to help you explore
+                energy-saving opportunities and discover products suited
+                to your home and goals.
+              </p>
+            </div>
+          </div>
+
+          <p className="home-about-tagline">
+            Small changes. Smarter choices. Better living.
+          </p>
+
+          <Link href="/products" className="home-about-button">
+            Shop EcoHome <span>→</span>
+          </Link>
+        </div>
+
+        <div className="home-about-visual">
+          <img
+            src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1000"
+            alt="Beautiful modern home interior with natural materials and indoor plants"
+          />
+          <div className="home-image-caption">
+            <span>✿</span> Live more sustainably
+          </div>
+        </div>
+
+        <div className="home-about-features">
+          <div className="home-about-card">
+            <span>♧</span>
+            <h3>Sustainability</h3>
+            <p>Thoughtful choices for a greener home.</p>
+          </div>
+
+          <div className="home-about-card">
+            <span>£</span>
+            <h3>Saving</h3>
+            <p>Helping reduce everyday energy use.</p>
+          </div>
+
+          <div className="home-about-card">
+            <span>⌂</span>
+            <h3>Comfort</h3>
+            <p>Making everyday living better.</p>
+          </div>
+        </div>
+      </section>
     </div>
+    
   );
 }

@@ -1,10 +1,10 @@
-
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { UserRound, Heart, Sparkles } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { Search, Sparkles, UserRound } from "lucide-react";
+import type { FormEvent } from "react";
 
 import BasketLink from "@/components/BasketLink";
 import AIShoppingAssistant from "@/components/AIShoppingAssistant";
@@ -12,49 +12,121 @@ import { createClient } from "@/lib/supabase/client";
 import type { Product } from "@/lib/types";
 
 
-
-const categories = [
-  {
-    name: "Lighting",
-    href: "/products?category=Lighting",
-    icon: "✦",
-  },
-  {
-    name: "Heating & Insulation",
-    href: "/products?category=Heating%20%26%20Insulation",
-    icon: "♨",
-  },
-  {
-    name: "Smart Energy",
-    href: "/products?category=Smart%20Energy",
-    icon: "⚡",
-  },
-  {
-    name: "Water Saving",
-    href: "/products?category=Water%20Saving",
-    icon: "◈",
-  },
-  {
-    name: "Kitchen Appliances",
-    href: "/products?category=Kitchen%20Appliances",
-    icon: "⌂",
-  },
+const searchPrompts = [
+  "LED bulbs under £20",
+  "Cut my heating bill",
+  "Water-saving showerheads",
 ];
-
-
 
 type Props = {
   products: Product[];
 };
 
+function getCategoryIcon(category: string) {
+  const name = category.toLowerCase();
+  if (name.includes("light")) return "✦";
+  if (name.includes("heat")) return "♨";
+  if (name.includes("energy")) return "⚡";
+  if (name.includes("water")) return "◈";
+  if (name.includes("kitchen")) return "⌂";
+  return "◈";
+}
+
 export default function EcoHeader({ products }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [shopOpen, setShopOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [assistantMinimized, setAssistantMinimized] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  useEffect(() => {
+    const query = pathname === "/products" ? searchParams.get("q") || "" : "";
+    // URL navigation must synchronize the controlled search field and dropdown.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchQuery(query);
+    setDebouncedQuery(query);
+    setSearchFocused(false);
+  }, [pathname, searchParams]);
+
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          products
+            .map((product) => product.category?.name?.trim())
+            .filter((name): name is string => !!name)
+        )
+      ).sort((a, b) => a.localeCompare(b)),
+    [products]
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
+
+  const searchResults = useMemo(() => {
+    const query = debouncedQuery.trim().toLowerCase();
+    if (!query) return [];
+
+    const budgetMatch = query.match(
+      /(?:under|below|less than|cheaper than|up to|max(?:imum)?)\s*£?\s*(\d+(?:\.\d+)?)/i
+    );
+    const maxPrice = budgetMatch ? Number(budgetMatch[1]) : null;
+    const searchableQuery = query
+      .replace(
+        /(?:under|below|less than|cheaper than|up to|max(?:imum)?)\s*£?\s*\d+(?:\.\d+)?/gi,
+        ""
+      )
+      .replace(/£\s*\d+(?:\.\d+)?/g, "");
+    const ignoredTerms = new Set([
+      "a", "an", "and", "anything", "eco", "find", "for", "i", "me",
+      "my", "of", "product", "products", "search", "the", "to", "with",
+    ]);
+    const terms = (searchableQuery.match(/[\p{L}\p{N}]+/gu) ?? [])
+      .filter((term) => !ignoredTerms.has(term));
+
+    return products
+      .map((product) => {
+        const searchableText = [
+          product.name,
+          product.description,
+          product.category?.name,
+          product.brand,
+          product.product_type,
+          product.specifications,
+          product.energy_saving,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        const score = terms.reduce(
+          (total, term) => total + Number(searchableText.includes(term)),
+          0
+        );
+
+        return { product, score };
+      })
+      .filter(({ product, score }) => {
+        const withinBudget =
+          maxPrice === null || Number(product.price) <= maxPrice;
+        return withinBudget && (terms.length === 0 || score > 0);
+      })
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          Number(a.product.price) - Number(b.product.price)
+      )
+      .slice(0, 5)
+      .map(({ product }) => product);
+  }, [products, debouncedQuery]);
 
   const isShopPage =
     pathname === "/products" ||
@@ -96,15 +168,13 @@ export default function EcoHeader({ products }: Props) {
     ? "/account"
     : "/login?next=/account";
 
-  const handleHeaderTriggerClick = () => {
-    if (!assistantOpen) {
-      setAssistantOpen(true);
-      setAssistantMinimized(false);
-    } else if (assistantMinimized) {
-      setAssistantMinimized(false);
-    } else {
-      setAssistantMinimized(true);
-    }
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    setSearchFocused(false);
+    router.push(`/products?q=${encodeURIComponent(query)}`);
   };
 
   return (
@@ -151,17 +221,15 @@ export default function EcoHeader({ products }: Props) {
               <div className="shop-menu">
                 {categories.map((category) => (
                   <Link
-                    key={category.name}
-                    href={category.href}
+                    key={category}
+                    href={`/products?category=${encodeURIComponent(category)}`}
                     onClick={() => {
                       setShopOpen(false);
                       setMenuOpen(false);
                     }}
                   >
-                    <span aria-hidden="true">
-                      {category.icon}
-                    </span>{" "}
-                    {category.name}
+                    <span aria-hidden="true">{getCategoryIcon(category)}</span>{" "}
+                    {category}
                   </Link>
                 ))}
 
@@ -179,26 +247,130 @@ export default function EcoHeader({ products }: Props) {
             )}
           </div>
 
-          <a className="nav-link" href="/#savings">
+          <Link className="nav-link" href="/#savings">
             Find My Savings
-          </a>
+          </Link>
         </nav>
 
         <div className="eco-actions">
-          <button
-            type="button"
-            className="eco-search ai-header-trigger"
-            onClick={handleHeaderTriggerClick}
-            aria-label="Open EcoHome AI shopping assistant"
-            aria-haspopup="dialog"
-            aria-expanded={assistantOpen && !assistantMinimized}
+          <div
+            className="nav-search-container"
+            onFocusCapture={() => setSearchFocused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                setSearchFocused(false);
+              }
+            }}
           >
-            <Sparkles className="ai-header-sparkle" size={17} />
-            <span className="ai-header-label">
-              Ask EcoHome AI
-            </span>
-            <span className="ai-header-arrow">⌄</span>
-          </button>
+            <form
+              className="eco-search ai-header-search"
+              role="search"
+              onSubmit={handleSearchSubmit}
+            >
+              <Sparkles className="ai-header-sparkle" size={17} aria-hidden="true" />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") setSearchFocused(false);
+                }}
+                placeholder="Ask anything or search eco products..."
+                aria-label="Ask anything or search eco products"
+                autoComplete="off"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  className="ai-header-clear"
+                  aria-label="Clear search"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setDebouncedQuery("");
+                  }}
+                >
+                  ×
+                </button>
+              )}
+              <button type="submit" aria-label="Search products">
+                <Search size={17} />
+              </button>
+            </form>
+
+            {searchFocused && (
+              <div
+                id="nav-search-popover"
+                className="nav-search-popover"
+                role="region"
+                aria-label="Search suggestions and products"
+              >
+                {searchQuery.trim() ? (
+                  <>
+                    {debouncedQuery.trim() ? (
+                      searchResults.length > 0 ? (
+                        <div className="nav-search-results">
+                          {searchResults.map((product) => (
+                            <Link
+                              className="nav-search-result"
+                              href={`/products/${product.id}`}
+                              key={product.id}
+                              onClick={() => setSearchFocused(false)}
+                            >
+                              {product.image_url ? (
+                                <img src={product.image_url} alt="" />
+                              ) : (
+                                <span className="nav-search-result-placeholder" aria-hidden="true">
+                                  {product.name.slice(0, 1)}
+                                </span>
+                              )}
+                              <span className="nav-search-result-copy">
+                                <strong>{product.name}</strong>
+                                <small>{product.category?.name ?? "Eco Product"}</small>
+                              </span>
+                              <strong className="nav-search-result-price">
+                                £{Number(product.price).toFixed(2)}
+                              </strong>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="nav-search-empty">
+                          No matching products found. Try a different search.
+                        </p>
+                      )
+                    ) : (
+                      <p className="nav-search-empty">Searching products...</p>
+                    )}
+                    <Link
+                      className="nav-search-all-link"
+                      href={`/products?q=${encodeURIComponent(searchQuery.trim())}`}
+                      onClick={() => setSearchFocused(false)}
+                    >
+                      View all results in catalogue →
+                    </Link>
+                  </>
+                ) : (
+                  <div className="nav-search-suggestions">
+                    <strong>Try asking EcoHome</strong>
+                    <p>
+                      Ask anything: &quot;LED bulbs under £20&quot; • &quot;Cut my
+                      heating bill&quot; • &quot;Water-saving showerheads&quot;
+                    </p>
+                    {searchPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        type="button"
+                        onClick={() => setSearchQuery(prompt)}
+                      >
+                        <Sparkles size={14} aria-hidden="true" />
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <Link
             className="icon-link"
@@ -208,13 +380,6 @@ export default function EcoHeader({ products }: Props) {
             <UserRound size={24} strokeWidth={1.8} />
           </Link>
 
-          <span
-            className="icon-link"
-            aria-label="Favourites coming soon"
-            title="Favourites coming soon"
-          >
-            <Heart size={24} strokeWidth={1.8} />
-          </span>
 
           <div className="basket-wrap">
             <BasketLink />
